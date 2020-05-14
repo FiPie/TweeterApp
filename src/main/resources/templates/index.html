@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+
+<!-- Bootstrap -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">
+
+<title>Tweeter Home</title>
+</head>
+<body>
+
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link active" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a>
+				</li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a>
+				</li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">Tweeter App with Thymeleaf</h5>
+			<p class="card-text">
+				Welcome to Tweeter <b
+					th:if="${session.userFirstName != null && session.userId != null}">
+					<a th:href="@{/user/{id}/tweets(id=${session.userId})}"
+					th:text="${session.userFirstName}"></a>
+				</b> , check out our cool and numerous feats!
+			</p>
+		</div>
+		<p>Something should show up below from MainController @ModelAttribute("likingUsers")</p>
+		<div th:each="liker : ${likingUsers}">
+			<span th:text="${liker.id}">Last Name</span>&nbsp;
+			<span th:text="${liker.firstName}">First Name</span>&nbsp;
+			<span th:text="${liker.lastName}">Last Name</span>&nbsp;
+			<span th:text="${liker.email}">Last Name</span>&nbsp;
+		</div>
+		<p>This on does NOT use Ajax! The one with Ajax is on TweetList (url: /tweet/list)</p>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Menu Fragment</title>
+</head>
+<body>
+
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link active" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a>
+				</li>
+				<li
+					th:if="${#authorization.expression('!isAuthenticated()') || #authorization.expression('hasRole("
+					ADMIN")') }" class="nav-item"><a class="nav-link"
+					th:href="@{/user/add}">AddUser</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">Tweeter App with Thymeleaf</h5>
+			<p class="card-text">
+				Welcome to Tweeter <b><span
+					th:if="${session.userFirstName != null}"
+					th:text="${session.userFirstName}"></span></b>, check out our cool and
+				numerous feats!
+			</p>
+		</div>
+	</div>
+
+</body>
+</html>

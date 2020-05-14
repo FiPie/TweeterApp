@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="'Edit '+${user.firstName}">Edit User</title>
+<!-- Bootstrap -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<script async src="https://kit.fontawesome.com/329115b60c.js"
+	crossorigin="anonymous"></script>
+<link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a></li>
+				<li class="nav-item"><a class="nav-link active" href="#">Edit<span
+						th:text="${user.firstName}"></span></a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">
+				Edit <span th:text="${user.firstName}"></span> <span
+					th:text="${user.lastName}"></span>
+			</h5>
+			<p class="card-text">Change the values in the below fields and
+				press 'save changes' button.</p>
+		</div>
+	</div>
+
+	<form method="POST" action="#" th:action="@{/user/edit}"
+		th:object="${user}">
+		<input type="hidden" th:field="*{id}"> <input type="hidden"
+			th:field="*{password}">
+		<div class="container">
+
+			<div class="row my-2 py-1 text-justify">
+				<div class="card col-6 px-0">
+
+					<div class="card-header pb-0 mb-0">
+						<div class="form-group row">
+							<label for="inputFirstName" class="col-sm-3 col-form-label">First
+								Name</label>
+							<div class="col-sm-9">
+								<input th:field="*{firstName}" type="text" class="form-control"
+									id="inputFirstName" placeholder="Bob"> <span
+									class="error" th:if="${#fields.hasErrors('firstName')}"
+									th:errors="*{firstName}"></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="inputLastName" class="col-sm-3 col-form-label">Last
+								Name</label>
+							<div class="col-sm-9">
+								<input th:field="*{lastName}" type="text" class="form-control"
+									id="inputLastName" placeholder="Kerman"> <span
+									class="error" th:if="${#fields.hasErrors('lastName')}"
+									th:errors="*{lastName}"></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
+							<div class="col-sm-9">
+								<input th:field="*{email}" type="email" class="form-control"
+									id="inputEmail" placeholder="Bob.Kerman@gmail.com"> <span
+									class="error" th:if="${#fields.hasErrors('email')}"
+									th:errors="*{email}"></span>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="card-footer text-muted pb-0 mb-0">
+						<div class="form-group row">
+							<div class="col-8"></div>
+							<div class="col-4">
+								<button class="btn btn-primary " type="submit">Save
+									Changes</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

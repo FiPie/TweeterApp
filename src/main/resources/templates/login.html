@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<!-- Bootstrap -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<link
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">
+
+<title>Login</title>
+</head>
+<body>
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link active"
+					th:href="@{/login}">Login</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">Tweeter Login panel</h5>
+			<p class="card-text">Please enter your user email address and
+				password</p>
+		</div>
+	</div>
+
+	<form method="POST" action="#" th:action="@{/login}"
+		th:object="${loginDto}">
+
+		<div class="container">
+
+			<div class="row my-2 py-1 text-justify">
+				<div class="card col-6 px-0">
+
+					<div class="card-header pb-0 mb-0">
+
+						<div class="form-group row">
+							<label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
+							<div class="col-sm-9">
+								<input th:field="*{email}" type="email" class="form-control"
+									id="inputEmail" placeholder="bob.kerman@gmail.com"> <span
+									class="error" th:if="${#fields.hasErrors('email')}"
+									th:errors="*{email}"></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="inputPassword" class="col-sm-3 col-form-label">Password</label>
+							<div class="col-sm-9">
+								<input th:field="*{password}" type="password" class="form-control"
+									id="inputPassword" placeholder="*******"> <span
+									class="error" th:if="${#fields.hasErrors('password')}"
+									th:errors="*{password}"></span>
+							</div>
+						</div>
+						<p th:if="${param['error'] != null}">Wrong login/password!</p>
+
+					</div>
+
+					<div class="card-footer text-muted pb-0 mb-0">
+						<div class="form-group row">
+							<div class="col-8"></div>
+							<div class="col-4">
+								<button class="btn btn-primary " type="submit">Login</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</form>
+
+</body>
+</html>

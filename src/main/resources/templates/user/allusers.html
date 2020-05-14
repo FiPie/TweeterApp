@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>All Users</title>
+<!-- Bootstrap -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<script async src="https://kit.fontawesome.com/329115b60c.js"
+	crossorigin="anonymous"></script>
+<link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link active"
+					th:href="@{/user/all}">UserList</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">List of our users</h5>
+			<p class="card-text">They are already with us, check out what
+				they already have said!</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">First Name</th>
+					<th scope="col">Last Name</th>
+					<th scope="col">Email</th>
+					<th scope="col" colspan="3">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user : ${availableUsers}">
+					<th scope="row" th:text="${availableUsers.indexOf(user)}+1"></th>
+					<td scope="row" th:text="${user.firstName}"></td>
+					<td th:text="${user.lastName}"></td>
+					<td th:text="${user.email}"></td>
+					<td><a th:href="@{/user/{id}/tweets(id=${user.id})}">Tweets</a>
+						<small>(<span th:text="${#lists.size(user.tweets)}"></span>)
+					</small></td>
+
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a></td>
+					<div sec:authorize="!hasRole('ROLE_ADMIN')">
+						<td sec:authorize="hasRole('ROLE_USER')"
+							th:if="${session.userId} == ${user.id}"><a
+							th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a></td>
+					</div>
+
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a></td>
+					<div sec:authorize="!hasRole('ROLE_ADMIN')">
+						<td sec:authorize="hasRole('ROLE_USER')"
+							th:if="${session.userId} == ${user.id}"><a
+							th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a></td>
+					</div>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
+<!-- sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')" -->

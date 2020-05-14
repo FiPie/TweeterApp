@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Add Tweet</title>
+<!-- Bootstrap -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<script async src="https://kit.fontawesome.com/329115b60c.js"
+	crossorigin="anonymous"></script>
+<link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link active"
+					th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">You can Tweet from here</h5>
+			<p class="card-text">Write your tweets and let the World know
+				what you think of things!</p>
+		</div>
+	</div>
+	<form method="POST" action="#" th:action="@{/tweet/add}"
+		th:object="${tweet}">
+
+		<div class="container">
+
+			<div class="row my-2 py-1 text-justify">
+				<div class="card col-6 px-0">
+
+					<div class="card-header pb-0 mb-0">
+						<div class="form-group row">
+							<label for="inputAuthor" class="col-sm-3 col-form-label">Author</label>
+							<div class="col-sm-9 pt-2 px-3">
+								<b th:text="${session.userFirstName}" id="inputAuthor">
+									<!-- <input class="form-control" type="hidden" th:field="*{user}" th:value="${author.id}" > -->
+								</b>
+								<!-- <span class="error" th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></span> -->
+								<!-- <select class="form-control" th:field="*{user}" id="inputAuthor">
+									<option th:each="user : ${availableUsers}"
+										th:value="${user.id}" th:text="${user.firstName}">Users
+									</option>
+								</select> -->
+							</div>
+						</div>
+					</div>
+
+					<div class="card-body">
+						<p class="card-title">
+						<div class="form-group row">
+							<label for="inputTitle" class="col-sm-3 col-form-label py-0 my-0">Title</label>
+							<div class="col-sm-9">
+								<input th:field="*{title}" type="text" class="form-control"
+									id="inputTitle" placeholder="Title"> <span
+									class="error" th:if="${#fields.hasErrors('title')}"
+									th:errors="*{title}"></span>
+							</div>
+						</div>
+						</p>
+
+						<p class="card-text">
+						<div class="form-group row">
+							<label for="inputText" class="col-sm-3 col-form-label py-0 my-0">Text</label>
+							<div class="col-sm-9">
+								<textarea rows="4" cols="40" th:field="*{tweetText}"
+									class="form-control" id="inputText" placeholder="Text"></textarea>
+								<span class="error" th:if="${#fields.hasErrors('tweetText')}"
+									th:errors="*{tweetText}"></span>
+							</div>
+						</div>
+						</p>
+
+					</div>
+
+					<div class="card-footer text-muted pb-0 mb-0">
+						<div class="form-group row">
+							<div class="col-9"></div>
+							<div class="col-3">
+								<button class="btn btn-primary " type="submit">Tweet
+									it!</button>
+								<!-- <input type="submit" value="Submit" /> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</form>
+
+</body>
+</html>

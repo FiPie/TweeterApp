@@ -1,0 +1,151 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Add User</title>
+<base "href=/">
+<!-- Bootstrap -->
+<link
+	href="
+	https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<script async src="https://kit.fontawesome.com/329115b60c.js"
+	crossorigin="anonymous"></script>
+<link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link active"
+					th:href="@{/user/add}">Register</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">Create a new user</h5>
+			<p class="card-text">
+				Just fill each of the below fields and press
+				<button
+					class="btn btn-primary btn-sm px-1 pt-0 pb-1 m-0 text-center"
+					disabled>
+					<small>Register User</small>
+				</button>
+				button.
+			</p>
+		</div>
+	</div>
+
+
+	<form method="POST" action="#" th:action="@{/user/add}"
+		th:object="${userForm}">
+
+		<div class="container">
+
+			<div class="row my-2 py-1 text-justify">
+				<div class="card col-6 px-0">
+
+					<div class="card-header pb-0 mb-0">
+						<div class="form-group row">
+							<label for="inputFirstName" class="col-sm-3 col-form-label">First
+								Name</label>
+							<div class="col-sm-9">
+								<input th:field="*{firstName}" type="text" class="form-control"
+									id="inputFirstName" placeholder="Bob"> <span
+									class="error" th:if="${#fields.hasErrors('firstName')}"
+									th:errors="*{firstName}"></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="inputLastName" class="col-sm-3 col-form-label">Last
+								Name</label>
+							<div class="col-sm-9">
+								<input th:field="*{lastName}" type="text" class="form-control"
+									id="inputLastName" placeholder="Kerman"> <span
+									class="error" th:if="${#fields.hasErrors('lastName')}"
+									th:errors="*{lastName}"></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
+							<div class="col-sm-9">
+								<input th:field="*{email}" type="email" class="form-control"
+									id="inputEmail" placeholder="bob.kerman@gmail.com"> <span
+									class="error" th:if="${#fields.hasErrors('email')}"
+									th:errors="*{email}"></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="inputPassword" class="col-sm-3 col-form-label">Password</label>
+							<div class="col-sm-9">
+								<input th:field="*{password}" type="password" class="form-control"
+									id="inputPassword" placeholder="enter your password"> <span
+									class="error" th:if="${#fields.hasErrors('password')}"
+									th:errors="*{password}"></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="inputPassword2" class="col-sm-3 col-form-label">Confirm
+								Password</label>
+							<div class="col-sm-9">
+								<input th:field="*{confirmedPassword}" type="password"
+									class="form-control" id="inputPassword2"
+									placeholder="confirm your password"> <span
+									class="error" th:if="${#fields.hasErrors('confirmedPassword')}"
+									th:errors="*{confirmedPassword}"></span>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="card-footer text-muted pb-0 mb-0">
+						<div class="form-group row">
+							<div class="col-8"></div>
+							<div class="col-4">
+								<button class="btn btn-primary " type="submit">Register
+									User</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+		<!-- <div>
+			<span>First Name: </span><input th:field="*{firstName}" /><br>
+			<span class="error" th:if="${#fields.hasErrors('firstName')}"
+				th:errors="*{firstName}"></span>
+		</div>
+		<div>
+			<span>Last Name: </span><input th:field="*{lastName}" /><br>
+			<span class="error" th:if="${#fields.hasErrors('lastName')}"
+				th:errors="*{lastName}"></span>
+		</div>
+		<div>
+			<span>Email: </span><input th:field="*{email}" /><br>
+			<span class="error" th:if="${#fields.hasErrors('email')}"
+				th:errors="*{email}"></span>
+		</div>
+		<hr>
+		<input type="submit" value="Submit" /> -->
+	</form>
+</body>
+</html>

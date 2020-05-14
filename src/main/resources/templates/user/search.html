@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Search Tweet</title>
+</head>
+<body>
+	<h1>Search for a Tweet like:</h1>
+	<!-- TODO add search bar binded with the input -->
+	<ul style="list-style-type: none;">
+		<li th:each="tweet : ${tweets}">
+			<hr> <span th:text="${tweet.user.firstName}">&nbsp;</span> <span
+			th:text="${tweet.user.lastName}">&nbsp;</span> <i
+			th:text="${tweet.user.email}"></i><br> <b
+			th:text="${tweet.title}"></b> <span th:text="${tweet.tweetText}"></span>
+			<hr>
+		</li>
+	</ul>
+
+</body>
+</html>

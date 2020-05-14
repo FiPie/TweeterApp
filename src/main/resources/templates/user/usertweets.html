@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${user.firstName}+ '\'s Tweets'"></title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script th:src="@{/js/api.js}"></script>
+
+<!-- Bootstrap -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<script async src="https://kit.fontawesome.com/329115b60c.js"
+	crossorigin="anonymous"></script>
+<link th:href="@{/css/style.css}" rel="stylesheet">
+
+</head>
+<body>
+
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a></li>
+				<li class="nav-item"><a class="nav-link active"
+					th:href="@{/user/{id}/tweets(id=${user.id})}"
+					th:text="${user.firstName}+ '\'s Tweets'"></a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">
+				<span th:text="${user.firstName}">&nbsp;</span> wrote these tweets
+			</h5>
+			<p class="card-text">
+				You can scroll and explore <span th:text="${user.firstName}"></span>'s
+				tweets <small><i>(of total: <span
+						th:text="${#lists.size(user.tweets)}"></span>)
+				</i></small>
+			</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<h5 class="text-center my-5" th:if="${ #lists.isEmpty(tweets)}">
+			Um... well, it seems like <span th:text="${user.firstName}"></span>
+			has not yet written anything, guess we'll just have to wait for it :)
+		</h5>
+		<div th:each="tweet : ${tweets}">
+			<div class="row my-2 pt-0 text-justify">
+				<div class="card col-6 px-0">
+
+					<div th:id="'tweetHeader'+${tweet.id}" class="card-header">
+						<span th:text="${tweet.user.firstName}">First Name</span>&nbsp;<span
+							th:text="${tweet.user.lastName}">Last Name</span>&nbsp; <span><i
+							th:text="${#dates.format(tweet.created, 'dd-MMM-yyyy HH:mm')}">Date</i></span>
+						<span>&nbsp; <a
+							th:href="@{/user/{id}/tweets(id=${tweet.user.id})}"> <i
+								th:text="${tweet.user.email}"></i>
+						</a>
+						</span>
+					</div>
+
+					<div class="card-body">
+						<h5 class="card-title" th:text="${tweet.title}">Special title
+							treatment</h5>
+						<p class="card-text" th:text="${tweet.tweetText}">With
+							supporting text below as a natural lead-in to additional content.</p>
+					</div>
+
+					<div class="card-footer bg-transparent">
+						<div class="row text-justify">
+							<div class="card-text col-6 pl-3">
+								<small class="text-muted">created <span
+									th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, time=${days.convert(#dates.createNow().getTime() - tweet.created.getTime(), days)/(1000)}">
+										<span th:if="${time < 60}"><span th:text="${time}"></span>
+											seconds</span> <span th:if="${(time > 60)&&(time < 120)}"><span
+											th:text="${time/60}"></span> minute</span> <span
+										th:if="${(time > 60)&&(time < 3600)}"><span
+											th:text="${time/60}"></span> minutes</span> <span
+										th:if="${(time > 3600)&&(time < 7200)}"><span
+											th:text="${time/3600}"></span> hour</span> <span
+										th:if="${(time > 3600)&&(time < 86400)}"><span
+											th:text="${time/3600}"></span> hours</span> <span
+										th:if="${(time > 86400)&&(time < 172800)}"><span
+											th:text="${time/86400}"></span> day</span> <span
+										th:if="${(time > 172800)}"><span
+											th:text="${time/86400}"></span> days</span>
+								</span> ago
+								</small>
+							</div>
+							<div class="card-text col-6 pr-3 text-right">
+								<small class="text-muted"><span>Likes <span
+										th:text="${tweet.likesNo}"></span></span></small>&nbsp;&nbsp; <small
+									class="text-muted"><span>Dislikes <span
+										th:text="${tweet.dislikesNo}"></span></span></small>&nbsp;&nbsp; <span><a
+									th:href="@{/tweet/{id}/like?user={user} (id=${tweet.id},user=${tweet.user.id})}"><i
+										class="far fa-thumbs-up"></i></a></span>&nbsp;&nbsp; <span><a
+									th:href="@{/tweet/{id}/dislike?user={user} (id=${tweet.id},user=${tweet.user.id}) }"><i
+										class="far fa-thumbs-down"></i></a></span>
+							</div>
+						</div>
+						<div class="row text-justify">
+							<div class="card-text col-6 pl-3"></div>
+							<div class="card-text col-6 pr-3 text-right" 
+								 onmouseenter="getLikers(this)" 
+								 onmouseleave="hideLikers(this)">
+								<small th:id="${tweet.id}">who likes your tweet? </small>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>
