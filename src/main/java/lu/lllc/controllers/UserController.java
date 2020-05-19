@@ -147,6 +147,11 @@ public class UserController {
 		}
 
 	}
+	@ModelAttribute("availableUsers")
+	public List<User> getAllUsers(){
+		List<User> availableUsers = this.userRepository.findAll();
+		return availableUsers;
+	}
 
 	@ModelAttribute("availableTweets")
 	public List<Tweet> getAllTweets() {
