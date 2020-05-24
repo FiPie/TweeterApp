@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +24,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -59,7 +62,20 @@ public class Tweet {
 	@OneToMany(mappedBy = "tweet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Like> likes;
 	
+//	@Nullable
+//	@PrimaryKeyJoinColumn
+	@JsonIgnore
+	@OneToOne(mappedBy= "tweet", cascade = CascadeType.ALL)
+	private Image image;
 	
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
 	private int likesNo;
 	private int dislikesNo;
 	
@@ -82,7 +98,7 @@ public class Tweet {
 
 	/* constructor */
 	public Tweet() { super(); }
-
+	
 	/* getters and setters */
 	public int getId() {
 		return id;

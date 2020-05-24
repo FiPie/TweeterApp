@@ -115,7 +115,7 @@
 		<div th:each="tweet : ${availableTweets}">
 			<div class="row my-2 py-1 text-justify">
 				<div class="card col-6 px-0">
-
+						
 					<div th:id="'tweetHeader'+${tweet.id}" class="card-header">
 						<span th:text="${tweet.user.firstName}">First Name</span>&nbsp;<span
 							th:text="${tweet.user.lastName}">Last Name</span>&nbsp; <span><i
@@ -126,7 +126,7 @@
 						</a>
 						</span>
 					</div>
-
+					
 					<div class="card-body">
 						<h5 class="card-title" th:text="${tweet.title}">Special title
 							treatment</h5>
@@ -134,9 +134,13 @@
 							supporting text below as a natural lead-in to additional content.</p>
 					</div>
 
+					<img class="card-img-top" th:src="@{/tweet/getImage/{id}(id=*{tweet.id})}" alt="Card image cap">
+					
 					<div class="card-footer bg-transparent">
 						<div class="row text-justify">
+						
 							<div class="card-text col-6 pl-3">
+								
 								<small class="text-muted">created <span
 									th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, time=${days.convert(#dates.createNow().getTime() - tweet.created.getTime(), days)/(1000)}">
 										<span th:if="${time < 60}"><span th:text="${time}"></span>
@@ -155,15 +159,44 @@
 								</span> ago
 								</small>
 							</div>
+					
 							<div class="card-text col-6 pr-3 text-right">
 								<small class="text-muted"><span>Likes <span
 										th:text="${tweet.likesNo}"></span></span></small>&nbsp;&nbsp; <small
 									class="text-muted"><span>Dislikes <span
-										th:text="${tweet.dislikesNo}"></span></span></small>&nbsp;&nbsp; <span><a
-									th:href="@{/tweet/{id}/like(id=${tweet.id})}"><i
-										class="far fa-thumbs-up"></i></a></span>&nbsp;&nbsp; <span><a
-									th:href="@{/tweet/{id}/dislike(id=${tweet.id})}"><i
-										class="far fa-thumbs-down"></i></a></span>
+										th:text="${tweet.dislikesNo}"></span></span></small>&nbsp;&nbsp; 
+										
+										<form th:action="@{/tweet/like}" method="POST" style="display: inline;">
+											<input type="hidden" th:value="${tweet.id}" name="tweetId">
+											<input type="hidden" th:value="${1}" name="value">
+											<input type="hidden" th:value="${page}" name="page"> 
+											<input type="hidden" th:value="${sort}" name="sort"> 
+											<input type="hidden" th:value="${size}" name="size"> 
+											<input type="hidden" th:value="${search}" name="search">
+											<button type="submit"><i class="far fa-thumbs-up"></i></button>
+										</form>
+										
+										<form th:action="@{/tweet/like}" method="POST" style="display: inline;">
+											<input type="hidden" th:value="${tweet.id}" name="tweetId">
+											<input type="hidden" th:value="${-1}" name="value">
+											<input type="hidden" th:value="${page}" name="page"> 
+											<input type="hidden" th:value="${sort}" name="sort"> 
+											<input type="hidden" th:value="${size}" name="size"> 
+											<input type="hidden" th:value="${search}" name="search">
+											<button type="submit"><i class="far fa-thumbs-down"></i></button>
+										</form>
+										
+										<span>
+											<a th:href="@{/tweet/{id}/like(id=${tweet.id})}">
+												<i class="far fa-thumbs-up"></i>
+											</a>
+										</span>&nbsp;&nbsp; 
+										
+										<span>
+											<a th:href="@{/tweet/{id}/dislike(id=${tweet.id})}">
+												<i class="far fa-thumbs-down"></i>
+											</a>
+										</span>
 							</div>
 						</div>
 						<div class="row text-justify">

@@ -39,7 +39,7 @@
 		</div>
 	</div>
 	<form method="POST" action="#" th:action="@{/tweet/add}"
-		th:object="${tweet}">
+		th:object="${tweet}" enctype="multipart/form-data">
 
 		<div class="container">
 
@@ -50,8 +50,7 @@
 						<div class="form-group row">
 							<label for="inputAuthor" class="col-sm-3 col-form-label">Author</label>
 							<div class="col-sm-9 pt-2 px-3">
-								<b th:text="${session.userFirstName}" id="inputAuthor">
-									<!-- <input class="form-control" type="hidden" th:field="*{user}" th:value="${author.id}" > -->
+								<b th:text="${session.userFirstName}" id="inputAuthor"> <!-- <input class="form-control" type="hidden" th:field="*{user}" th:value="${author.id}" > -->
 								</b>
 								<!-- <span class="error" th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></span> -->
 								<!-- <select class="form-control" th:field="*{user}" id="inputAuthor">
@@ -92,7 +91,11 @@
 
 					<div class="card-footer text-muted pb-0 mb-0">
 						<div class="form-group row">
-							<div class="col-9"></div>
+							<div class="col-6">
+								<label for="file">Select a file to upload</label>
+								<input type="file" name="file" id="file" accept="image/*">
+							</div>
+							<div class="col-3"></div>
 							<div class="col-3">
 								<button class="btn btn-primary " type="submit">Tweet
 									it!</button>
