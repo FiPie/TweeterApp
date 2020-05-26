@@ -28,6 +28,7 @@ import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "tweets")
@@ -54,12 +55,13 @@ public class Tweet {
 	private Timestamp created;
 	
 	@JsonIgnore
+	@JsonManagedReference
 	@JoinColumn(name="userId")
 	@ManyToOne
 	private User user;
 
 	@JsonBackReference
-	@OneToMany(mappedBy = "tweet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Like> likes;
 	
 //	@Nullable

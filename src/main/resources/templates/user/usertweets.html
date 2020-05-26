@@ -47,17 +47,19 @@
 			<p class="card-text">
 				You can scroll and explore <span th:text="${user.firstName}"></span>'s
 				tweets <small><i>(of total: <span
-						th:text="${#lists.size(user.tweets)}"></span>)
+						th:text="${tweetsTotal}"></span>)
 				</i></small>
 			</p>
 		</div>
 	</div>
 
 	<div class="container">
+	
 		<h5 class="text-center my-5" th:if="${ #lists.isEmpty(tweets)}">
 			Um... well, it seems like <span th:text="${user.firstName}"></span>
 			has not yet written anything, guess we'll just have to wait for it :)
 		</h5>
+		
 		<div th:each="tweet : ${tweets}">
 			<div class="row my-2 pt-0 text-justify">
 				<div class="card col-6 px-0">
@@ -82,7 +84,9 @@
 
 					<div class="card-footer bg-transparent">
 						<div class="row text-justify">
+						
 							<div class="card-text col-6 pl-3">
+								
 								<small class="text-muted">created <span
 									th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, time=${days.convert(#dates.createNow().getTime() - tweet.created.getTime(), days)/(1000)}">
 										<span th:if="${time < 60}"><span th:text="${time}"></span>
@@ -105,11 +109,28 @@
 								<small class="text-muted"><span>Likes <span
 										th:text="${tweet.likesNo}"></span></span></small>&nbsp;&nbsp; <small
 									class="text-muted"><span>Dislikes <span
-										th:text="${tweet.dislikesNo}"></span></span></small>&nbsp;&nbsp; <span><a
+										th:text="${tweet.dislikesNo}"></span></span></small>&nbsp;&nbsp; 
+										
+										<form th:action="@{/user/like}" method="POST" style="display: inline;">
+											<input type="hidden" th:value="${tweet.id}" name="tweetId">
+											<input type="hidden" th:value="${1}" name="value">
+											<input type="hidden" th:value="${tweet.user.id}" name="tweetAuthorId">
+											<button type="submit"><i class="far fa-thumbs-up"></i></button>
+										</form>
+										
+										<form th:action="@{/user/like}" method="POST" style="display: inline;">
+											<input type="hidden" th:value="${tweet.id}" name="tweetId">
+											<input type="hidden" th:value="${-1}" name="value">
+											<input type="hidden" th:value="${tweet.user.id}" name="tweetAuthorId">
+											<button type="submit"><i class="far fa-thumbs-down"></i></button>
+										</form>
+										
+										<!-- <span><a
 									th:href="@{/tweet/{id}/like?user={user} (id=${tweet.id},user=${tweet.user.id})}"><i
-										class="far fa-thumbs-up"></i></a></span>&nbsp;&nbsp; <span><a
+										class="far fa-thumbs-up"></i></a></span>&nbsp;&nbsp; 
+										<span><a
 									th:href="@{/tweet/{id}/dislike?user={user} (id=${tweet.id},user=${tweet.user.id}) }"><i
-										class="far fa-thumbs-down"></i></a></span>
+										class="far fa-thumbs-down"></i></a></span> -->
 							</div>
 						</div>
 						<div class="row text-justify">
@@ -117,7 +138,7 @@
 							<div class="card-text col-6 pr-3 text-right" 
 								 onmouseenter="getLikers(this)" 
 								 onmouseleave="hideLikers(this)">
-								<small th:id="${tweet.id}">who likes your tweet? </small>
+								<small th:if="${tweet.likesNo > 0}" th:id="${tweet.id}">who likes your tweet? </small>
 							</div>
 						</div>
 					</div>

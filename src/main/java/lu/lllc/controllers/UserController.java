@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lu.lllc.dto.RegistrationDto;
+import lu.lllc.entities.Like;
 import lu.lllc.entities.Tweet;
 import lu.lllc.entities.User;
 import lu.lllc.entities.UserRole;
@@ -50,8 +51,10 @@ public class UserController {
 	public String findTweetsByUserId(@PathVariable int id, Model model) {
 		User user = this.userRepository.getOne(id);
 		List<Tweet> tweets = this.tweetRepository.findAllByUser(user);
+		int tweetsTotal = tweets.size();
 		model.addAttribute("tweets", tweets);
 		model.addAttribute("user", user);
+		model.addAttribute("tweetsTotal", tweetsTotal);
 		return "user/usertweets";
 	}
 
@@ -67,7 +70,9 @@ public class UserController {
 		if (principal == null) {
 			model.addAttribute("userForm", new RegistrationDto());
 			return "user/adduser";
-		}else {return "redirect:/";}
+		} else {
+			return "redirect:/";
+		}
 	}
 
 	@PostMapping("/add")
@@ -147,8 +152,32 @@ public class UserController {
 		}
 
 	}
+
+	@PostMapping("/like")
+	public String saveLike(@ModelAttribute("tweetId") String tweetId, @ModelAttribute("value") String value,
+			@ModelAttribute("tweetAuthorId") String tweetAuthorId, Principal principal, Model model) {
+		Like like = new Like();
+		int tweetID = Integer.valueOf(tweetId);
+		int userID = Integer.valueOf(tweetAuthorId);
+		
+		like.setTweet(tweetRepository.getOne(tweetID));
+		if (principal != null) {
+			int userId = userRepository.findByEmail(principal.getName()).getId();
+			int likeValue = Integer.valueOf(value);
+			if (likeRepository.likeExists(userId, tweetID, likeValue) < 1) {
+				like.setUser(userRepository.getOne(userId));
+				like.setValue(likeValue);
+				this.likeRepository.save(like);
+			}
+
+			return "redirect:/user/"+ userID +"/tweets#tweetHeader" + tweetId;
+		}
+
+		return "redirect:/login";
+	}
+
 	@ModelAttribute("availableUsers")
-	public List<User> getAllUsers(){
+	public List<User> getAllUsers() {
 		List<User> availableUsers = this.userRepository.findAll();
 		return availableUsers;
 	}

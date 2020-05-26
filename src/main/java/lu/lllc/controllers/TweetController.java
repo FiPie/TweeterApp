@@ -2,20 +2,10 @@ package lu.lllc.controllers;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Null;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import lu.lllc.entities.Image;
 import lu.lllc.entities.Like;
 import lu.lllc.entities.Tweet;
 import lu.lllc.entities.User;
@@ -44,7 +35,7 @@ import lu.lllc.repositories.ImageRepository;
 import lu.lllc.repositories.LikeRepository;
 import lu.lllc.repositories.TweetRepository;
 import lu.lllc.repositories.UserRepository;
-import lu.lllc.entities.Image;
+import net.bytebuddy.implementation.bytecode.constant.IntegerConstant;
 
 @Controller
 @RequestMapping("/tweet")
@@ -154,17 +145,13 @@ public class TweetController {
 		return "tweet/list";
 	}
 
-	//TODO
 	@GetMapping("/getImage/{id}")
 	ResponseEntity<byte[]> getImage(@PathVariable("id") int id){
 		
 		HttpHeaders headers = new HttpHeaders();
 	    Optional<Image> image_op = imageRepository.findById(id);
 	    if(image_op.isPresent()) {
-	    	Image image = image_op.get();
-	    	//In this case it would be better to store the image as a BLOB
-	    	//Because we decided to store it in Base64 encoded form - we need to decode it now
-	    	//You've just learned how to do it
+	    	Image image = image_op.get(); 
 	    	
 	    	byte[] data = image.getImage();
 	    	
@@ -179,27 +166,39 @@ public class TweetController {
 	    return new ResponseEntity<>(null, headers, HttpStatus.NOT_FOUND);
 		
 	}
-	//TODO
-	@RequestMapping("/{tweetId}/like")
-	public String likeThisTweet(@PathVariable int tweetId, @RequestParam Optional<String> user, Principal principal) {
-		Like like = new Like();
-		like.setTweet(tweetRepository.getOne(tweetId));
-		if (principal != null) {
-			int userId = userRepository.findByEmail(principal.getName()).getId();
-			int value = 1;
-			if (likeRepository.likeExists(userId, tweetId, value) < 1) {
-				like.setUser(userRepository.getOne(userId));
-				like.setValue(value);
-				this.likeRepository.save(like);
-			}
-			if (user.isPresent()) {
-				return "redirect:/user/" + user.get() + "/tweets#tweetHeader" + tweetId;
-			} else {
-				return "redirect:/tweet/list#tweetHeader" + tweetId;
-			}
-		}
-		return "redirect:/login";
+	
+	@GetMapping("/getTweetTotalByUserId/{id}")
+	ResponseEntity<String> getNumberOfTweets(@PathVariable("id") int id){
+		
+		HttpHeaders headers = new HttpHeaders();
+		String tweetTotal = String.valueOf(userRepository.getOne(id).getTweets().size());
+	    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+	    headers.setContentType(MediaType.parseMediaType("text/html")); 
+	    ResponseEntity<String> responseEntity = new ResponseEntity<>(tweetTotal, headers, HttpStatus.OK);
+	    return responseEntity;
 	}
+	
+//	//TODO
+//	@RequestMapping("/{tweetId}/like")
+//	public String likeThisTweet(@PathVariable int tweetId, @RequestParam Optional<String> user, Principal principal) {
+//		Like like = new Like();
+//		like.setTweet(tweetRepository.getOne(tweetId));
+//		if (principal != null) {
+//			int userId = userRepository.findByEmail(principal.getName()).getId();
+//			int value = 1;
+//			if (likeRepository.likeExists(userId, tweetId, value) < 1) {
+//				like.setUser(userRepository.getOne(userId));
+//				like.setValue(value);
+//				this.likeRepository.save(like);
+//			}
+//			if (user.isPresent()) {
+//				return "redirect:/user/" + user.get() + "/tweets#tweetHeader" + tweetId;
+//			} else {
+//				return "redirect:/tweet/list#tweetHeader" + tweetId;
+//			}
+//		}
+//		return "redirect:/login";
+//	}
 	
 	@PostMapping("/like")
 	public String saveLike(
@@ -210,7 +209,6 @@ public class TweetController {
 			@ModelAttribute("tweetId") String tweetId,
 			@ModelAttribute("value") String value,
 			Principal principal, Model model) {
-		
 		Like like = new Like();
 		int tweetID = Integer.valueOf(tweetId);
 		like.setTweet(tweetRepository.getOne(tweetID));
@@ -232,28 +230,28 @@ public class TweetController {
 		
 		return "redirect:/login";
 	}
-	//TODO
-	@RequestMapping("/{tweetId}/dislike")
-	public String dislikeThisTweet(@PathVariable int tweetId, @RequestParam Optional<String> user,
-			Principal principal) {
-		Like dislike = new Like();
-		dislike.setTweet(tweetRepository.getOne(tweetId));
-		if (principal != null) {
-			int userId = userRepository.findByEmail(principal.getName()).getId();
-			int value = -1;
-			if (likeRepository.likeExists(userId, tweetId, value) < 1) {
-				dislike.setUser(userRepository.getOne(userId));
-				dislike.setValue(value);
-				this.likeRepository.save(dislike);
-			}
-			if (user.isPresent()) {
-				return "redirect:/user/" + user.get() + "/tweets#tweetHeader" + tweetId;
-			} else {
-				return "redirect:/tweet/list#tweetHeader" + tweetId;
-			}
-		}
-		return "redirect:/login";
-	}
+//	//TODO
+//	@RequestMapping("/{tweetId}/dislike")
+//	public String dislikeThisTweet(@PathVariable int tweetId, @RequestParam Optional<String> user,
+//			Principal principal) {
+//		Like dislike = new Like();
+//		dislike.setTweet(tweetRepository.getOne(tweetId));
+//		if (principal != null) {
+//			int userId = userRepository.findByEmail(principal.getName()).getId();
+//			int value = -1;
+//			if (likeRepository.likeExists(userId, tweetId, value) < 1) {
+//				dislike.setUser(userRepository.getOne(userId));
+//				dislike.setValue(value);
+//				this.likeRepository.save(dislike);
+//			}
+//			if (user.isPresent()) {
+//				return "redirect:/user/" + user.get() + "/tweets#tweetHeader" + tweetId;
+//			} else {
+//				return "redirect:/tweet/list#tweetHeader" + tweetId;
+//			}
+//		}
+//		return "redirect:/login";
+//	}
 
 	@ModelAttribute("availableTweets")
 	public List<Tweet> getAllTweets() {
