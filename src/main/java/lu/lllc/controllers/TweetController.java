@@ -120,7 +120,7 @@ public class TweetController {
 		pageNo = page.isBlank() ? 0
 				: Integer.valueOf(page) < 0 ? 0 : Integer.valueOf(page) >= lastPage ? lastPage : Integer.valueOf(page);
 		
-		orderSort = order.isBlank() ? 1
+		orderSort = order.isBlank() ? -1
 				: Integer.valueOf(order);
 				
 		
