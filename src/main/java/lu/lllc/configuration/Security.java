@@ -64,6 +64,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/user/edit/**" ).hasAnyRole("ADMIN","USER")
                 .antMatchers( "/tweet/list" ).permitAll()
                 .antMatchers( "/tweet/getImage/*" ).permitAll()
+                .antMatchers( "/tweet/showTweet/*" ).permitAll()
                 .antMatchers( "/tweet/like" ).authenticated()
                 .antMatchers( "/tweet/add" ).authenticated()
                 .antMatchers( "/tweet/*/like" ).authenticated()

@@ -54,7 +54,8 @@
 						oninput="this.form.submit()" autofocus
 						onfocus="this.setSelectionRange(-1,-1)"> <input
 						type="hidden" th:value="${sort}" name="sort"> <input
-						type="hidden" th:value="${size}" name="size">
+						type="hidden" th:value="${size}" name="size"> <input
+						type="hidden" th:value="${order}" name="order">
 					<!-- <button type="submit">Search</button> -->
 				</form>
 			</div>
@@ -65,7 +66,8 @@
 					<input type="hidden" th:value="${page - 1}" name="page"> <input
 						type="hidden" th:value="${sort}" name="sort"> <input
 						type="hidden" th:value="${size}" name="size"> <input
-						type="hidden" th:value="${search}" name="search">
+						type="hidden" th:value="${search}" name="search"><input
+						type="hidden" th:value="${order}" name="order">
 					<button><<</button>
 				</form>
 
@@ -75,7 +77,8 @@
 					<input type="hidden" th:value="${page + 1}" name="page"> <input
 						type="hidden" th:value="${sort}" name="sort"> <input
 						type="hidden" th:value="${size}" name="size"> <input
-						type="hidden" th:value="${search}" name="search">
+						type="hidden" th:value="${search}" name="search"><input
+						type="hidden" th:value="${order}" name="order">
 					<button>>></button>
 				</form>
 
@@ -89,7 +92,8 @@
 						<option th:value="title" th:text="title"></option>
 					</select> <input type="hidden" th:value="${page}" name="page"> <input
 						type="hidden" th:value="${size}" name="size"> <input
-						type="hidden" th:value="${search}" name="search">
+						type="hidden" th:value="${search}" name="search"><input
+						type="hidden" th:value="${order}" name="order">
 				</form>
 
 				<form method="post" action="/tweet/list" style="display: inline">
@@ -103,49 +107,70 @@
 						<option th:value="100" th:text="100"></option>
 					</select> <input type="hidden" th:value="${page}" name="page"> <input
 						type="hidden" th:value="${sort}" name="sort"> <input
-						type="hidden" th:value="${search}" name="search">
+						type="hidden" th:value="${search}" name="search"><input
+						type="hidden" th:value="${order}" name="order">
 				</form>
+				
+				<form method="post" action="/tweet/list" style="display: inline">
+					<input type="hidden" th:value="${sort}" name="sort"> 
+					<input type="hidden" th:value="${size}" name="size"> 
+					<input type="hidden" th:value="${search}" name="search">
+					
+					<div style="display: inline" th:if="${order} == 1">
+						<input type="hidden" th:value="${-1}" name="order">
+						<button th:if="${order} == 1"><i class="fas fa-sort-amount-down"></i></button>
+					</div>
+					<div style="display: inline" th:if="${order} == -1">	
+						<input type="hidden" th:value="${1}" name="order">					
+						<button th:if="${order} == -1"><i class="fas fa-sort-amount-down-alt"></i></button>
+					</div>
+				</form>
+				
 			</div>
 			<div class="col-3"></div>
 		</div>
 	</div>
-	
+
 	<div class="container">
 
 		<div th:each="tweet : ${availableTweets}">
 			<div class="row my-2 py-1 text-justify">
 				<div class="card col-6 px-0">
-						
+
 					<div th:id="'tweetHeader'+${tweet.id}" class="card-header">
-						<span th:text="${tweet.user.firstName}">First Name</span>&nbsp;<span
-							th:text="${tweet.user.lastName}">Last Name</span>&nbsp; <span><i
+						<a th:href="@{/tweet/showTweet/{id}(id=${tweet.id})}"> <span
+							th:text="${tweet.user.firstName}">First Name</span>&nbsp; <span
+							th:text="${tweet.user.lastName}">Last Name</span>
+						</a> <span>&nbsp;<i
 							th:text="${#dates.format(tweet.created, 'dd-MMM-yyyy HH:mm')}">Date</i></span>
+
 						<span>&nbsp; <a
 							th:href="@{/user/{id}/tweets(id=${tweet.user.id})}"> <i
 								th:text="${tweet.user.email}"></i>
 						</a>
 						</span>
 					</div>
-					
+
 					<div class="card-body pb-0 mb-0">
 						<h5 class="card-title" th:text="${tweet.title}">Special title
 							treatment</h5>
-						
+
 					</div>
 
-					<img class="card-img-top py-1" th:src="@{/tweet/getImage/{id}(id=*{tweet.id})}" alt="">
-					
+					<img class="card-img-top py-1"
+						th:src="@{/tweet/getImage/{id}(id=*{tweet.id})}" alt="">
+
 					<div class="card-body pt-0 mt-0">
-						
+
 						<p class="card-text" th:text="${tweet.tweetText}">With
 							supporting text below as a natural lead-in to additional content.</p>
 					</div>
-					
+
 					<div class="card-footer bg-transparent">
 						<div class="row text-justify">
-						
+
 							<div class="card-text col-6 pl-3">
-								
+
 								<small class="text-muted">created <span
 									th:with="days=${T(java.util.concurrent.TimeUnit).DAYS}, time=${days.convert(#dates.createNow().getTime() - tweet.created.getTime(), days)/(1000)}">
 										<span th:if="${time < 60}"><span th:text="${time}"></span>
@@ -164,34 +189,40 @@
 								</span> ago
 								</small>
 							</div>
-					
+
 							<div class="card-text col-6 pr-3 text-right">
 								<small class="text-muted"><span>Likes <span
 										th:text="${tweet.likesNo}"></span></span></small>&nbsp;&nbsp; <small
 									class="text-muted"><span>Dislikes <span
-										th:text="${tweet.dislikesNo}"></span></span></small>&nbsp;&nbsp; 
-										
-										<form th:action="@{/tweet/like}" method="POST" style="display: inline;">
-											<input type="hidden" th:value="${tweet.id}" name="tweetId">
-											<input type="hidden" th:value="${1}" name="value">
-											<input type="hidden" th:value="${page}" name="page"> 
-											<input type="hidden" th:value="${sort}" name="sort"> 
-											<input type="hidden" th:value="${size}" name="size"> 
-											<input type="hidden" th:value="${search}" name="search">
-											<button type="submit"><i class="far fa-thumbs-up"></i></button>
-										</form>
-										
-										<form th:action="@{/tweet/like}" method="POST" style="display: inline;">
-											<input type="hidden" th:value="${tweet.id}" name="tweetId">
-											<input type="hidden" th:value="${-1}" name="value">
-											<input type="hidden" th:value="${page}" name="page"> 
-											<input type="hidden" th:value="${sort}" name="sort"> 
-											<input type="hidden" th:value="${size}" name="size"> 
-											<input type="hidden" th:value="${search}" name="search">
-											<button type="submit"><i class="far fa-thumbs-down"></i></button>
-										</form>
-										
-<!-- 										<span>
+										th:text="${tweet.dislikesNo}"></span></span></small>&nbsp;&nbsp;
+
+								<form th:action="@{/tweet/like}" method="POST"
+									style="display: inline;">
+									<input type="hidden" th:value="${tweet.id}" name="tweetId">
+									<input type="hidden" th:value="${1}" name="value"> <input
+										type="hidden" th:value="${page}" name="page"> <input
+										type="hidden" th:value="${sort}" name="sort"> <input
+										type="hidden" th:value="${size}" name="size"> <input
+										type="hidden" th:value="${search}" name="search">
+									<button type="submit">
+										<i class="far fa-thumbs-up"></i>
+									</button>
+								</form>
+
+								<form th:action="@{/tweet/like}" method="POST"
+									style="display: inline;">
+									<input type="hidden" th:value="${tweet.id}" name="tweetId">
+									<input type="hidden" th:value="${-1}" name="value"> <input
+										type="hidden" th:value="${page}" name="page"> <input
+										type="hidden" th:value="${sort}" name="sort"> <input
+										type="hidden" th:value="${size}" name="size"> <input
+										type="hidden" th:value="${search}" name="search">
+									<button type="submit">
+										<i class="far fa-thumbs-down"></i>
+									</button>
+								</form>
+
+								<!-- 										<span>
 											<a th:href="@{/tweet/{id}/like(id=${tweet.id})}">
 												<i class="far fa-thumbs-up"></i>
 											</a>
@@ -206,10 +237,10 @@
 						</div>
 						<div class="row text-justify">
 							<div class="card-text col-6 pl-3"></div>
-							<div class="card-text col-6 pr-3 text-right" 
-								 onmouseenter="getLikers(this)" 
-								 onmouseleave="hideLikers(this)">
-								<small th:if="${tweet.likesNo > 0}" th:id="${tweet.id}">who likes your tweet? </small>
+							<div class="card-text col-6 pr-3 text-right"
+								onmouseenter="getLikers(this)" onmouseleave="hideLikers(this)">
+								<small th:if="${tweet.likesNo > 0}" th:id="${tweet.id}">who
+									likes your tweet? </small>
 							</div>
 						</div>
 					</div>

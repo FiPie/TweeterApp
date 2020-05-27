@@ -52,29 +52,37 @@
 			</thead>
 			<tbody>
 				<tr th:each="user : ${availableUsers}">
+				
 					<th scope="row" th:text="${availableUsers.indexOf(user)}+1"></th>
 					<td scope="row" th:text="${user.firstName}"></td>
 					<td th:text="${user.lastName}"></td>
 					<td th:text="${user.email}"></td>
-					<td><a th:href="@{/user/{id}/tweets(id=${user.id})}">Tweets</a>
-						<small>(<span th:text="${#lists.size(user.tweets)}"></span>)
-					</small></td>
-
-					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
-						th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a></td>
+					
+					<td>
+						<a th:href="@{/user/{id}/tweets(id=${user.id})}">Tweets</a>
+						<small>(<span th:text="${#lists.size(user.tweets)}"></span>)</small>
+					</td>
+					
+					<td sec:authorize="hasRole('ROLE_ADMIN')">
+						<a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>
+					</td>
+					
 					<div sec:authorize="!hasRole('ROLE_ADMIN')">
-						<td sec:authorize="hasRole('ROLE_USER')"
-							th:if="${session.userId} == ${user.id}"><a
-							th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a></td>
+						<td sec:authorize="hasRole('ROLE_USER')" th:if="${session.userId} == ${user.id}">
+							<a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>
+						</td>
 					</div>
 
-					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
-						th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a></td>
+					<td sec:authorize="hasRole('ROLE_ADMIN')">
+						<a th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a>
+					</td>
+					
 					<div sec:authorize="!hasRole('ROLE_ADMIN')">
-						<td sec:authorize="hasRole('ROLE_USER')"
-							th:if="${session.userId} == ${user.id}"><a
-							th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a></td>
+						<td sec:authorize="hasRole('ROLE_USER')" th:if="${session.userId} == ${user.id}">
+							<a th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a>
+						</td>
 					</div>
+					
 				</tr>
 			</tbody>
 		</table>

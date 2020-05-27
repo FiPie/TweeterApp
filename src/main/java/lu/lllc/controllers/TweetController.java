@@ -98,9 +98,10 @@ public class TweetController {
 
 	@RequestMapping("/list")
 	public String getList(@ModelAttribute("search") String search, @ModelAttribute("size") String size,
-			@ModelAttribute("sort") String sort, @ModelAttribute("page") String page, Model model) {
+			@ModelAttribute("sort") String sort, @ModelAttribute("page") String page, @ModelAttribute("order") String order,
+			Model model) {
 
-		Integer pageNo, pageSize, totalNoTweets, lastPage;
+		Integer pageNo, pageSize, totalNoTweets, lastPage, orderSort;
 
 		String sortBy = sort.isBlank() ? (session.getAttribute("sort") != null ? (String) session.getAttribute("sort") : "created")  : sort;
 		String searchQuery = search.isBlank() ? (session.getAttribute("search") != null ? (String) session.getAttribute("search") : "") : search;
@@ -118,8 +119,14 @@ public class TweetController {
 
 		pageNo = page.isBlank() ? 0
 				: Integer.valueOf(page) < 0 ? 0 : Integer.valueOf(page) >= lastPage ? lastPage : Integer.valueOf(page);
-
-		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		
+		orderSort = order.isBlank() ? 1
+				: Integer.valueOf(order);
+				
+		
+		Pageable pageable = (orderSort == 1) 
+				? PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending()) 
+				: PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
 
 		List<Tweet> availableTweets = tweetRepository
 				.findTweetsByTitleIgnoreCaseContainsOrTweetTextIgnoreCaseContainsOrUserFirstNameIgnoreCaseContainsOrUserLastNameIgnoreCaseContainsOrUserEmailIgnoreCaseContains(
@@ -139,12 +146,27 @@ public class TweetController {
 		model.addAttribute("size", pageSize);
 		model.addAttribute("sort", sortBy);
 		model.addAttribute("page", pageNo);
+		model.addAttribute("order", orderSort);
 		model.addAttribute("availableTweets", availableTweets);
 		model.addAttribute("totalTweets", totalNoTweets);
 
 		return "tweet/list";
 	}
+	
+	
+	@GetMapping("/showTweet/{id}")
+	public String showOneTweet(@PathVariable("id") int id, Model model) {
+	
+		Tweet tweet = tweetRepository.getOne(id);
+		User user = userRepository.getOne(tweet.getUser().getId());
+		model.addAttribute("tweet", tweet);
+		model.addAttribute("user", user);
+		model.addAttribute("tweetsTotal", user.getTweets().size());
+		
+		return "tweet/showTweet";
+	}
 
+	
 	@GetMapping("/getImage/{id}")
 	ResponseEntity<byte[]> getImage(@PathVariable("id") int id){
 		
@@ -167,38 +189,19 @@ public class TweetController {
 		
 	}
 	
-	@GetMapping("/getTweetTotalByUserId/{id}")
-	ResponseEntity<String> getNumberOfTweets(@PathVariable("id") int id){
-		
-		HttpHeaders headers = new HttpHeaders();
-		String tweetTotal = String.valueOf(userRepository.getOne(id).getTweets().size());
-	    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-	    headers.setContentType(MediaType.parseMediaType("text/html")); 
-	    ResponseEntity<String> responseEntity = new ResponseEntity<>(tweetTotal, headers, HttpStatus.OK);
-	    return responseEntity;
-	}
-	
-//	//TODO
-//	@RequestMapping("/{tweetId}/like")
-//	public String likeThisTweet(@PathVariable int tweetId, @RequestParam Optional<String> user, Principal principal) {
-//		Like like = new Like();
-//		like.setTweet(tweetRepository.getOne(tweetId));
-//		if (principal != null) {
-//			int userId = userRepository.findByEmail(principal.getName()).getId();
-//			int value = 1;
-//			if (likeRepository.likeExists(userId, tweetId, value) < 1) {
-//				like.setUser(userRepository.getOne(userId));
-//				like.setValue(value);
-//				this.likeRepository.save(like);
-//			}
-//			if (user.isPresent()) {
-//				return "redirect:/user/" + user.get() + "/tweets#tweetHeader" + tweetId;
-//			} else {
-//				return "redirect:/tweet/list#tweetHeader" + tweetId;
-//			}
-//		}
-//		return "redirect:/login";
+//	I went with Thymeleaf utility class #list.size(myList) besides I didn't find any way to request and display ResposeEntity<String> as a th:text
+
+//	@GetMapping("/getTweetTotalByUserId/{id}")
+//	ResponseEntity<String> getNumberOfTweets(@PathVariable("id") int id){
+//		
+//		HttpHeaders headers = new HttpHeaders();
+//		String tweetTotal = String.valueOf(userRepository.getOne(id).getTweets().size());
+//	    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+//	    headers.setContentType(MediaType.parseMediaType("text/html")); 
+//	    ResponseEntity<String> responseEntity = new ResponseEntity<>(tweetTotal, headers, HttpStatus.OK);
+//	    return responseEntity;
 //	}
+	
 	
 	@PostMapping("/like")
 	public String saveLike(
@@ -230,28 +233,7 @@ public class TweetController {
 		
 		return "redirect:/login";
 	}
-//	//TODO
-//	@RequestMapping("/{tweetId}/dislike")
-//	public String dislikeThisTweet(@PathVariable int tweetId, @RequestParam Optional<String> user,
-//			Principal principal) {
-//		Like dislike = new Like();
-//		dislike.setTweet(tweetRepository.getOne(tweetId));
-//		if (principal != null) {
-//			int userId = userRepository.findByEmail(principal.getName()).getId();
-//			int value = -1;
-//			if (likeRepository.likeExists(userId, tweetId, value) < 1) {
-//				dislike.setUser(userRepository.getOne(userId));
-//				dislike.setValue(value);
-//				this.likeRepository.save(dislike);
-//			}
-//			if (user.isPresent()) {
-//				return "redirect:/user/" + user.get() + "/tweets#tweetHeader" + tweetId;
-//			} else {
-//				return "redirect:/tweet/list#tweetHeader" + tweetId;
-//			}
-//		}
-//		return "redirect:/login";
-//	}
+
 
 	@ModelAttribute("availableTweets")
 	public List<Tweet> getAllTweets() {
