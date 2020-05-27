@@ -48,9 +48,11 @@ public class User {
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Tweet> tweets;
 	
-	@OneToMany(mappedBy = "user", cascade = {CascadeType.ALL} , targetEntity = UserRole.class)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL} , targetEntity = UserRole.class)
     private List<UserRole> userRoles;
 
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Like> likes;
 	
 	/* constructor */
 	public User() { super(); }

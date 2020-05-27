@@ -95,22 +95,59 @@ public class UserController {
 		return "user/allusers";
 	}
 
-	@RequestMapping("/delete/{id}")
-	public String removeUser(@PathVariable int id, Principal principal) {
-		if (userRepository.findByEmail(principal.getName()).getId() == id
+	/*
+	 * @RequestMapping("/delete/{id}") public String removeUser(@PathVariable int
+	 * id, Principal principal) { if
+	 * (userRepository.findByEmail(principal.getName()).getId() == id ||
+	 * userRepository.findByEmail(principal.getName()).getUserRoles().stream()
+	 * .anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) { User user;
+	 * Optional<User> optional = this.userRepository.findById(id); if
+	 * (!optional.isEmpty()) { user = optional.get();
+	 * this.userRepository.delete(user);
+	 * 
+	 * if (userRepository.findByEmail(principal.getName()).getUserRoles().stream()
+	 * .anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) { return
+	 * "redirect:/user/all"; }
+	 * 
+	 * return "redirect:/logout"; } else { return "user/allusers"; } } else { return
+	 * "user/allusers"; } }
+	 */
+	
+	/*
+	 * @GetMapping("/edit/{id}") public String editUserGet(Model
+	 * model, @PathVariable int id, Principal principal) { if
+	 * (userRepository.findByEmail(principal.getName()).getId() == id ||
+	 * userRepository.findByEmail(principal.getName()).getUserRoles().stream()
+	 * .anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) { User user;
+	 * Optional<User> optional = this.userRepository.findById(id); if
+	 * (!optional.isEmpty()) { user = optional.get(); model.addAttribute("user",
+	 * user);
+	 * 
+	 * return "/user/edituser";
+	 * 
+	 * } else { return "user/allusers"; } } else return "user/allusers"; }
+	 */
+
+	@PostMapping("/delete")
+	public String removeUser(@ModelAttribute("userId") int userId, Principal principal) {
+
+		if (userRepository.findByEmail(principal.getName()).getId() == userId
 				|| userRepository.findByEmail(principal.getName()).getUserRoles().stream()
 						.anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) {
 			User user;
-			Optional<User> optional = this.userRepository.findById(id);
+			Optional<User> optional = this.userRepository.findById(userId);
+
 			if (!optional.isEmpty()) {
 				user = optional.get();
 				this.userRepository.delete(user);
-
-				if (userRepository.findByEmail(principal.getName()).getUserRoles().stream()
-						.anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) {
+				
+				System.out.println("principal.getName() : " + principal.getName());
+				
+				if (userRepository.findByEmail(principal.getName()) != null && userRepository.findByEmail(principal.getName()).getUserRoles()
+						.stream().anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) {
+					System.out.println("I'M HERE ln133");
 					return "redirect:/user/all";
 				}
-
 				return "redirect:/logout";
 			} else {
 				return "user/allusers";
@@ -120,19 +157,17 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/edit/{id}")
-	public String editUserGet(Model model, @PathVariable int id, Principal principal) {
-		if (userRepository.findByEmail(principal.getName()).getId() == id
+	@PostMapping("/edit/form")
+	public String editUserGet(@ModelAttribute("userId") int userId, Model model, Principal principal) {
+		if (userRepository.findByEmail(principal.getName()).getId() == userId
 				|| userRepository.findByEmail(principal.getName()).getUserRoles().stream()
 						.anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) {
 			User user;
-			Optional<User> optional = this.userRepository.findById(id);
+			Optional<User> optional = this.userRepository.findById(userId);
 			if (!optional.isEmpty()) {
 				user = optional.get();
 				model.addAttribute("user", user);
-
 				return "/user/edituser";
-
 			} else {
 				return "user/allusers";
 			}
@@ -159,7 +194,7 @@ public class UserController {
 		Like like = new Like();
 		int tweetID = Integer.valueOf(tweetId);
 		int userID = Integer.valueOf(tweetAuthorId);
-		
+
 		like.setTweet(tweetRepository.getOne(tweetID));
 		if (principal != null) {
 			int userId = userRepository.findByEmail(principal.getName()).getId();
@@ -170,7 +205,7 @@ public class UserController {
 				this.likeRepository.save(like);
 			}
 
-			return "redirect:/user/"+ userID +"/tweets#tweetHeader" + tweetId;
+			return "redirect:/user/" + userID + "/tweets#tweetHeader" + tweetId;
 		}
 
 		return "redirect:/login";

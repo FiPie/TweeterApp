@@ -64,16 +64,38 @@
 					</td>
 					
 					<td sec:authorize="hasRole('ROLE_ADMIN')">
-						<a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>
+						<form th:action="@{/user/delete}" method="POST" style="display: inline;">
+							<input type="hidden" th:value="${user.id}" name="userId">
+							<button class="btn btn-link card-link ml-1">Delete(a)</button>
+						</form>
 					</td>
 					
 					<div sec:authorize="!hasRole('ROLE_ADMIN')">
 						<td sec:authorize="hasRole('ROLE_USER')" th:if="${session.userId} == ${user.id}">
-							<a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>
+							<form th:action="@{/user/delete}" method="POST" style="display: inline;">
+								<input type="hidden" th:value="${user.id}" name="userId">
+								<button class="btn btn-link card-link ml-1">Delete(u)</button>
+							</form>
 						</td>
 					</div>
 
 					<td sec:authorize="hasRole('ROLE_ADMIN')">
+						<form th:action="@{/user/edit/form}" method="POST" style="display: inline;">
+							<input type="hidden" th:value="${user.id}" name="userId">
+							<button class="btn btn-link card-link ml-1">Edit(a)</button>
+						</form>
+					</td>
+					
+					<div sec:authorize="!hasRole('ROLE_ADMIN')">
+						<td sec:authorize="hasRole('ROLE_USER')" th:if="${session.userId} == ${user.id}">
+							<form th:action="@{/user/edit/form}" method="POST" style="display: inline;">
+								<input type="hidden" th:value="${user.id}" name="userId">
+								<button class="btn btn-link card-link ml-1">Edit(u)</button>
+							</form>
+						</td>
+					</div>
+
+<!-- 					<td sec:authorize="hasRole('ROLE_ADMIN')">
 						<a th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a>
 					</td>
 					
@@ -81,7 +103,7 @@
 						<td sec:authorize="hasRole('ROLE_USER')" th:if="${session.userId} == ${user.id}">
 							<a th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a>
 						</td>
-					</div>
+					</div> -->
 					
 				</tr>
 			</tbody>

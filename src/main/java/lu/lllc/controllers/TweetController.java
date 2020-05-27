@@ -120,7 +120,7 @@ public class TweetController {
 		pageNo = page.isBlank() ? 0
 				: Integer.valueOf(page) < 0 ? 0 : Integer.valueOf(page) >= lastPage ? lastPage : Integer.valueOf(page);
 		
-		orderSort = order.isBlank() ? -1
+		orderSort = order.isBlank() ? (session.getAttribute("order") == null ? -1 : (int)session.getAttribute("order"))
 				: Integer.valueOf(order);
 				
 		
@@ -141,6 +141,7 @@ public class TweetController {
 		session.removeAttribute("size");
 		session.removeAttribute("sort");
 		session.removeAttribute("page");
+		session.removeAttribute("order");
 		
 		model.addAttribute("search", searchQuery);
 		model.addAttribute("size", pageSize);
@@ -209,6 +210,7 @@ public class TweetController {
 			@ModelAttribute("size") String size,
 			@ModelAttribute("sort") String sort, 
 			@ModelAttribute("page") String page,
+			@ModelAttribute("order") String order,
 			@ModelAttribute("tweetId") String tweetId,
 			@ModelAttribute("value") String value,
 			Principal principal, Model model) {
@@ -227,7 +229,8 @@ public class TweetController {
 			session.setAttribute("size", Integer.valueOf(size));
 			session.setAttribute("sort", sort);
 			session.setAttribute("page", Integer.valueOf(page));
-				
+			session.setAttribute("order", Integer.valueOf(order));
+			
 			return "redirect:/tweet/list#tweetHeader" + tweetId;
 		}
 		
