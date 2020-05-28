@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -66,7 +67,7 @@ public class TweetController {
 	public String postForm(@Validated @ModelAttribute("tweet") Tweet tweet, BindingResult bindingResult,
 			@RequestParam("file") MultipartFile file, Principal principal) {
 		if (bindingResult.hasErrors()) {
-			return "tweet/addtweet";
+			return "redirect:/tweet/add";
 		} else {
 			/*
 			 * When we have a hidden field and we want to assign it a value, strangely
@@ -95,6 +96,30 @@ public class TweetController {
 			return "redirect:/tweet/list";
 		}
 	}
+	
+	@PostMapping("/edit/form")
+	public String getTweetEditForm(@ModelAttribute("tweetId") int tweetId, @ModelAttribute("userId") int userId, Model model, Principal principal) {
+		
+		Tweet tweet = tweetRepository.getOne(tweetId);
+		User tweetAuthor = userRepository.getOne(userId);
+		model.addAttribute("tweet",tweet);
+		model.addAttribute("user",tweetAuthor);
+		
+		return "tweet/edittweet";
+	}
+	
+	@PostMapping("/edit")
+	@Transactional
+	public String editTweet(@Validated @ModelAttribute("tweet") Tweet tweet, BindingResult bindingResult) {
+		/* User author = userRepository.getOne(tweet.getUser().getId()); */
+		if (bindingResult.hasErrors()) {
+			return "redirect:/tweet/showTweet/"+tweet.getId()+"";
+		} else {
+			this.tweetRepository.save(tweet);
+			return "redirect:/tweet/showTweet/"+tweet.getId()+"";
+		}
+	}
+	
 
 	@RequestMapping("/list")
 	public String getList(@ModelAttribute("search") String search, @ModelAttribute("size") String size,

@@ -177,7 +177,7 @@ public class UserController {
 
 	@PostMapping("/edit")
 	@Transactional
-	public String editUserPost(@Validated @ModelAttribute("user") User user, BindingResult bindingResult) {
+	public String editUser(@Validated @ModelAttribute("user") User user, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "/user/edituser";
 		} else {

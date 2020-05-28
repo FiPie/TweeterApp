@@ -1,0 +1,109 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="'Edit '+${user.firstName}+'\'s Tweet'"></title>
+<!-- Bootstrap -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	crossorigin="anonymous">
+<script async src="https://kit.fontawesome.com/329115b60c.js"
+	crossorigin="anonymous"></script>
+<link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/tweet/list}">TweetList</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a></li>
+				<li class="nav-item"><a class="nav-link active" href="#">Edit
+						<span th:text="${user.firstName} + '\'s Tweet'"></span>
+				</a></li>
+				<li th:if="${#authorization.expression('!isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+				<li th:if="${#authorization.expression('isAuthenticated()')}"
+					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">
+				Edit <span th:text="${user.firstName}"></span> <span
+					th:text="${user.lastName}"></span>'s Tweet
+			</h5>
+			<p class="card-text">Change the values in the below fields and
+				when ready press 'save changes' button.</p>
+		</div>
+	</div>
+
+	<div class="container">
+
+		<div class="row my-2 pt-0 text-justify">
+			<form method="POST" th:action="@{/tweet/edit}" th:object="${tweet}">
+				<div class="card col-6 px-0">
+					<input type="hidden" th:field="*{id}">
+					<input type="hidden" th:field="*{created}">
+					<input type="hidden" th:field="*{user}">
+					
+					<div th:id="'tweetHeader'+${tweet.id}" class="card-header">
+						
+						<span th:text="${tweet.user.firstName}">First Name</span>&nbsp;
+						
+						<span th:text="${tweet.user.lastName}">Last Name</span>&nbsp; 
+						
+						<span>
+							<i th:text="${#dates.format(tweet.created, 'dd-MMM-yyyy HH:mm')}">Date</i>
+						</span>
+						
+						<span>&nbsp;
+							<a th:href="@{/user/{id}/tweets(id=${tweet.user.id})}"> 
+								<i th:text="${tweet.user.email}"></i>
+							</a>
+						</span>
+						
+					</div>
+
+					<div class="card-body">
+						<div class="form-group row">
+							<input th:field="*{title}" style="font-size: 1.25em" type="text" class="form-control" id="inputTitle" placeholder="Title"> 
+							<span class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+						</div>
+					</div>
+					
+					<img class="card-img-top py-1"
+						th:src="@{/tweet/getImage/{id}(id=${tweet.id})}" alt="No image">
+						
+					<div class="card-body">
+						<div class="form-group row">
+							<textarea rows="4" cols="160" th:field="*{tweetText}" class="form-control" id="inputText" placeholder="Text"></textarea>
+							<span class="error" th:if="${#fields.hasErrors('tweetText')}" th:errors="*{tweetText}"></span>
+						</div>
+					</div>
+					
+					
+					<div class="card-footer">
+						<div class="form-group row">
+							<div class="col-8 pt-3"></div>
+							<div class="col-4 pt-3">
+								<button class="btn btn-primary " type="submit">Save Changes</button>
+							</div>
+						</div>
+					</div>
+					
+				
+				</div>
+			</form>
+		</div>
+		
+	</div>
+
+
+</body>
+</html>

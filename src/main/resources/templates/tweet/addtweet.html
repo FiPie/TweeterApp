@@ -50,14 +50,7 @@
 						<div class="form-group row">
 							<label for="inputAuthor" class="col-sm-3 col-form-label">Author</label>
 							<div class="col-sm-9 pt-2 px-3">
-								<b th:text="${session.userFirstName}" id="inputAuthor"> <!-- <input class="form-control" type="hidden" th:field="*{user}" th:value="${author.id}" > -->
-								</b>
-								<!-- <span class="error" th:if="${#fields.hasErrors('user')}" th:errors="*{user}"></span> -->
-								<!-- <select class="form-control" th:field="*{user}" id="inputAuthor">
-									<option th:each="user : ${availableUsers}"
-										th:value="${user.id}" th:text="${user.firstName}">Users
-									</option>
-								</select> -->
+								<b th:text="${session.userFirstName}" id="inputAuthor"> </b>
 							</div>
 						</div>
 					</div>
@@ -79,8 +72,7 @@
 						<div class="form-group row">
 							<label for="inputText" class="col-sm-3 col-form-label py-0 my-0">Text</label>
 							<div class="col-sm-9">
-								<textarea rows="4" cols="40" th:field="*{tweetText}"
-									class="form-control" id="inputText" placeholder="Text"></textarea>
+								<textarea rows="4" cols="40" th:field="*{tweetText}" class="form-control" id="inputText" placeholder="Text"></textarea>
 								<span class="error" th:if="${#fields.hasErrors('tweetText')}"
 									th:errors="*{tweetText}"></span>
 							</div>

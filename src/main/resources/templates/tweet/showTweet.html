@@ -57,7 +57,7 @@
 				<div class="card col-6 px-0">
 
 					<div th:id="'tweetHeader'+${tweet.id}" class="card-header">
-						<span th:text="${tweet.user.firstName}">First Name</span>&nbsp;<span
+						<span th:text="${tweet.user.firstName}">First Name</span>&nbsp;&nbsp;<span
 							th:text="${tweet.user.lastName}">Last Name</span>&nbsp; <span><i
 							th:text="${#dates.format(tweet.created, 'dd-MMM-yyyy HH:mm')}">Date</i></span>
 						<span>&nbsp; <a
@@ -71,16 +71,49 @@
 						<h5 class="card-title" th:text="${tweet.title}">Special title
 							treatment</h5>
 					</div>
+					
 					<img class="card-img-top py-1"
 						th:src="@{/tweet/getImage/{id}(id=*{tweet.id})}" alt="">
+					
 					<div class="card-body">
 						<p class="card-text" th:text="${tweet.tweetText}">With
 							supporting text below as a natural lead-in to additional content.</p>
 							
-							<div sec:authorize="hasRole('ROLE_ADMIN')">
-								<a th:href="@{/user/delete/{id}(id=${user.id})}" class="card-link">edit</a>
-    							<a th:href="@{/user/delete/{id}(id=${user.id})}" class="card-link">delete</a>
-    						</div>
+						<span sec:authorize="hasRole('ROLE_ADMIN')">
+							<form th:action="@{/tweet/delete}" method="POST" style="display: inline;">
+								<input type="hidden" th:value="${tweet.id}" name="tweetId">
+								<input type="hidden" th:value="${user.id}" name="userId">
+								<button class="btn btn-link card-link ml-1">Delete(a)</button>
+							</form>
+						</span>
+					
+						<span sec:authorize="!hasRole('ROLE_ADMIN')">
+							<span sec:authorize="hasRole('ROLE_USER')" th:if="${session.userId} == ${user.id}">
+								<form th:action="@{/tweet/delete}" method="POST" style="display: inline;">
+									<input type="hidden" th:value="${tweet.id}" name="tweetId">
+									<input type="hidden" th:value="${user.id}" name="userId">
+									<button class="btn btn-link card-link ml-1">Delete(u)</button>
+								</form>
+							</span>
+						</span>
+
+						<span sec:authorize="hasRole('ROLE_ADMIN')">
+							<form th:action="@{/tweet/edit/form}" method="POST" style="display: inline;">
+								<input type="hidden" th:value="${tweet.id}" name="tweetId">
+								<input type="hidden" th:value="${user.id}" name="userId">
+								<button class="btn btn-link card-link">Edit(a)</button>
+							</form>
+						</span>
+					
+						<span sec:authorize="!hasRole('ROLE_ADMIN')">
+							<span sec:authorize="hasRole('ROLE_USER')" th:if="${session.userId} == ${user.id}">
+								<form th:action="@{/tweet/edit/form}" method="POST" style="display: inline;">
+									<input type="hidden" th:value="${tweet.id}" name="tweetId">
+									<input type="hidden" th:value="${user.id}" name="userId">
+									<button class="btn btn-link card-link">Edit(u)</button>
+								</form>
+							</span>
+						</span>
     						
 					</div>
 
