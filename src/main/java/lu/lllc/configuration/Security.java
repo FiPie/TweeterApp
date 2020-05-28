@@ -71,8 +71,6 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/tweet/edit" ).authenticated()
                 .antMatchers( "/tweet/like" ).authenticated()
                 .antMatchers( "/tweet/add" ).authenticated()
-//                .antMatchers( "/tweet/*/like" ).authenticated()				//old liking using GET method
-//                .antMatchers( "/tweet/*/dislike" ).authenticated()			//old disliking using GET method
                 .antMatchers( "/admin/**" ).hasRole( "ADMIN" )
                 .anyRequest().authenticated()
                 .and()

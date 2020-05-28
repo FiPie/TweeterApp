@@ -40,7 +40,7 @@ public class Tweet {
 	@Column
 	private int id;
 
-	@Size(min = 5, max = 50, message="Tweet title length should be anything between 5 and 160 characters")
+	@Size(min = 5, max = 50, message="Tweet title length should be anything between 5 and 50 characters")
 	@Column
 	@NotBlank(message="The title cannot be empty or consist only of whitespace characters")
 	private String title;
@@ -66,9 +66,11 @@ public class Tweet {
 	
 //	@Nullable
 //	@PrimaryKeyJoinColumn
-	@JsonIgnore
-	@OneToOne(mappedBy= "tweet", cascade = CascadeType.ALL)
+//	@JsonIgnore
+	@JsonBackReference
+	@OneToOne(mappedBy= "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Image image;
+	
 	
 	public Image getImage() {
 		return image;

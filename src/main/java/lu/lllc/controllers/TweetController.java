@@ -36,7 +36,6 @@ import lu.lllc.repositories.ImageRepository;
 import lu.lllc.repositories.LikeRepository;
 import lu.lllc.repositories.TweetRepository;
 import lu.lllc.repositories.UserRepository;
-import net.bytebuddy.implementation.bytecode.constant.IntegerConstant;
 
 @Controller
 @RequestMapping("/tweet")
@@ -96,6 +95,48 @@ public class TweetController {
 			return "redirect:/tweet/list";
 		}
 	}
+	
+	
+	
+	@PostMapping("/delete")
+	public String removeTweet(@ModelAttribute("tweetId") int tweetId, @ModelAttribute("userId") int userId, Principal principal) {
+		
+		if (userRepository.findByEmail(principal.getName()).getId() == userId
+				|| userRepository.findByEmail(principal.getName()).getUserRoles().stream()
+						.anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) {
+			
+			Tweet tweet;
+			Optional<Tweet> optionalTweet = this.tweetRepository.findById(tweetId);
+			/*
+			 * User user; Optional<User> optionalUser =
+			 * this.userRepository.findById(userId); Image image; Optional<Image>
+			 * optionalImage = this.imageRepository.findById(tweetId);
+			 */
+			
+			if (!optionalTweet.isEmpty() /* && !optionalUser.isEmpty() */) {
+				tweet = optionalTweet.get();
+				
+				/*
+				 * user = optionalUser.get(); tweet.setUser(user); if(!optionalImage.isEmpty())
+				 * { image = optionalImage.get(); tweet.setImage(image); }
+				 */
+				System.out.println("");
+				System.out.println("@ModelAttribute(\"tweetId\") int tweetId="+ tweetId +"");
+				System.out.println("attempting to DELETE tweet.getId()="+ tweet.getId() +"");
+				this.tweetRepository.delete(tweetRepository.getOne(tweetId));
+				/* this.tweetRepository.delete(tweet); */
+				/* tweetRepository.deleteById(tweetId); */
+				System.out.println("DELETED ? : " + !tweetRepository.existsById(tweetId));
+				return "redirect:/user/"+userId+"/tweets";
+			}else {
+				return "redirect:/tweet/showTweet/"+tweetId+"";
+			}
+		} else {
+			return "redirect:/tweet/showTweet/"+ tweetId+"";
+		}
+	}
+	
+	
 	
 	@PostMapping("/edit/form")
 	public String getTweetEditForm(@ModelAttribute("tweetId") int tweetId, @ModelAttribute("userId") int userId, Model model, Principal principal) {

@@ -4,10 +4,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import javax.imageio.spi.RegisterableService;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +21,9 @@ import lu.lllc.dto.RegistrationDto;
 import lu.lllc.entities.Like;
 import lu.lllc.entities.Tweet;
 import lu.lllc.entities.User;
-import lu.lllc.entities.UserRole;
 import lu.lllc.repositories.LikeRepository;
 import lu.lllc.repositories.TweetRepository;
 import lu.lllc.repositories.UserRepository;
-import lu.lllc.repositories.UserRoleRepository;
 import lu.lllc.services.RegistrationService;
 
 @Controller
@@ -42,8 +36,6 @@ public class UserController {
 	private TweetRepository tweetRepository;
 	@Autowired
 	private RegistrationService registrationService;
-	@Autowired
-	private UserRoleRepository userRoleRepository;
 	@Autowired
 	private LikeRepository likeRepository;
 
@@ -95,39 +87,7 @@ public class UserController {
 		return "user/allusers";
 	}
 
-	/*
-	 * @RequestMapping("/delete/{id}") public String removeUser(@PathVariable int
-	 * id, Principal principal) { if
-	 * (userRepository.findByEmail(principal.getName()).getId() == id ||
-	 * userRepository.findByEmail(principal.getName()).getUserRoles().stream()
-	 * .anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) { User user;
-	 * Optional<User> optional = this.userRepository.findById(id); if
-	 * (!optional.isEmpty()) { user = optional.get();
-	 * this.userRepository.delete(user);
-	 * 
-	 * if (userRepository.findByEmail(principal.getName()).getUserRoles().stream()
-	 * .anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) { return
-	 * "redirect:/user/all"; }
-	 * 
-	 * return "redirect:/logout"; } else { return "user/allusers"; } } else { return
-	 * "user/allusers"; } }
-	 */
 	
-	/*
-	 * @GetMapping("/edit/{id}") public String editUserGet(Model
-	 * model, @PathVariable int id, Principal principal) { if
-	 * (userRepository.findByEmail(principal.getName()).getId() == id ||
-	 * userRepository.findByEmail(principal.getName()).getUserRoles().stream()
-	 * .anyMatch(role -> role.getRole().equals("ROLE_ADMIN"))) { User user;
-	 * Optional<User> optional = this.userRepository.findById(id); if
-	 * (!optional.isEmpty()) { user = optional.get(); model.addAttribute("user",
-	 * user);
-	 * 
-	 * return "/user/edituser";
-	 * 
-	 * } else { return "user/allusers"; } } else return "user/allusers"; }
-	 */
-
 	@PostMapping("/delete")
 	public String removeUser(@ModelAttribute("userId") int userId, Principal principal) {
 
@@ -139,8 +99,9 @@ public class UserController {
 
 			if (!optional.isEmpty()) {
 				user = optional.get();
+				System.out.println("attempting to DELETE User.id="+ user.getId() +"");
 				this.userRepository.delete(user);
-				
+				System.out.println("DELETED");
 				System.out.println("principal.getName() : " + principal.getName());
 				
 				if (userRepository.findByEmail(principal.getName()) != null && userRepository.findByEmail(principal.getName()).getUserRoles()
