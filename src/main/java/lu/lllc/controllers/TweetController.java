@@ -71,7 +71,7 @@ public class TweetController {
 			/*
 			 * When we have a hidden field and we want to assign it a value, strangely
 			 * thymeleaf will ignore the th:value property Hence we have to set tweet.user
-			 * property here... there are some cases where thymeleaf does not work properly.
+			 * property here... there are some cases where thymeleaf does not work as we would expect.
 			 */
 			User author = userRepository.findByEmail(principal.getName());
 			tweet.setUser(author);
@@ -90,12 +90,10 @@ public class TweetController {
 					e.printStackTrace();
 				}
 			}
-
 			this.tweetRepository.save(tweet);
 			return "redirect:/tweet/list";
 		}
 	}
-	
 	
 	
 	@PostMapping("/delete")
@@ -107,27 +105,16 @@ public class TweetController {
 			
 			Tweet tweet;
 			Optional<Tweet> optionalTweet = this.tweetRepository.findById(tweetId);
-			/*
-			 * User user; Optional<User> optionalUser =
-			 * this.userRepository.findById(userId); Image image; Optional<Image>
-			 * optionalImage = this.imageRepository.findById(tweetId);
-			 */
 			
-			if (!optionalTweet.isEmpty() /* && !optionalUser.isEmpty() */) {
+			if (!optionalTweet.isEmpty()) {
 				tweet = optionalTweet.get();
 				
-				/*
-				 * user = optionalUser.get(); tweet.setUser(user); if(!optionalImage.isEmpty())
-				 * { image = optionalImage.get(); tweet.setImage(image); }
-				 */
 				System.out.println("");
 				System.out.println("@ModelAttribute(\"tweetId\") int tweetId="+ tweetId +"");
 				System.out.println("attempting to DELETE tweet.getId()="+ tweet.getId() +"");
-				/* this.tweetRepository.delete(tweetRepository.getOne(tweetId)); */
-				tweetRepository.flush();
-				this.tweetRepository.delete(tweet);
 				
-				/* tweetRepository.deleteById(tweetId); */
+				this.tweetRepository.delete(tweet);
+	
 				System.out.println("DELETED ? : " + !tweetRepository.existsById(tweetId));
 				return "redirect:/user/"+userId+"/tweets";
 			}else {
@@ -137,7 +124,6 @@ public class TweetController {
 			return "redirect:/tweet/showTweet/"+ tweetId+"";
 		}
 	}
-	
 	
 	
 	@PostMapping("/edit/form")
@@ -154,7 +140,6 @@ public class TweetController {
 	@PostMapping("/edit")
 	@Transactional
 	public String editTweet(@Validated @ModelAttribute("tweet") Tweet tweet, BindingResult bindingResult) {
-		/* User author = userRepository.getOne(tweet.getUser().getId()); */
 		if (bindingResult.hasErrors()) {
 			return "redirect:/tweet/showTweet/"+tweet.getId()+"";
 		} else {
@@ -162,7 +147,6 @@ public class TweetController {
 			return "redirect:/tweet/showTweet/"+tweet.getId()+"";
 		}
 	}
-	
 
 	@RequestMapping("/list")
 	public String getList(@ModelAttribute("search") String search, @ModelAttribute("size") String size,
@@ -258,20 +242,6 @@ public class TweetController {
 		
 	}
 	
-//	I went with Thymeleaf utility class #list.size(myList) besides I didn't find any way to request and display ResposeEntity<String> as a th:text
-
-//	@GetMapping("/getTweetTotalByUserId/{id}")
-//	ResponseEntity<String> getNumberOfTweets(@PathVariable("id") int id){
-//		
-//		HttpHeaders headers = new HttpHeaders();
-//		String tweetTotal = String.valueOf(userRepository.getOne(id).getTweets().size());
-//	    headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-//	    headers.setContentType(MediaType.parseMediaType("text/html")); 
-//	    ResponseEntity<String> responseEntity = new ResponseEntity<>(tweetTotal, headers, HttpStatus.OK);
-//	    return responseEntity;
-//	}
-	
-	
 	@PostMapping("/like")
 	public String saveLike(
 			@ModelAttribute("search") String search, 
@@ -301,7 +271,6 @@ public class TweetController {
 			
 			return "redirect:/tweet/list#tweetHeader" + tweetId;
 		}
-		
 		return "redirect:/login";
 	}
 
@@ -321,10 +290,3 @@ public class TweetController {
 		return this.userRepository.findAll();
 	}
 }
-
-/*
- * import java.time.Duration; import java.time.Instant; Instant start =
- * Instant.now(); //your code Instant end = Instant.now(); Duration timeElapsed
- * = Duration.between(start, end); System.out.println("Time taken: "+
- * timeElapsed.toMillis() +" milliseconds");
- */

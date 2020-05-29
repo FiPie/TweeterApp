@@ -8,7 +8,6 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="images")
@@ -18,8 +17,7 @@ public class Image {
 	@Column(name="id")
 	private int id;
 	
-	@JsonManagedReference
-	@OneToOne(targetEntity = Tweet.class)
+	@OneToOne
 	@MapsId
 	private Tweet tweet;
 	

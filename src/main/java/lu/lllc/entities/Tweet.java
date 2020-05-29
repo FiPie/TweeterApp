@@ -58,15 +58,12 @@ public class Tweet {
 	private User user;
 
 	@JsonBackReference
-	@OneToMany(orphanRemoval = true, mappedBy = "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Like.class)
+	@OneToMany(mappedBy = "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Like.class)
 	private List<Like> likes;
 	
 
-//	@PrimaryKeyJoinColumn
-//	@JsonIgnore
-	@Nullable
-	@JsonBackReference
-	@OneToOne(orphanRemoval = true, mappedBy= "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
+	@OneToOne(mappedBy= "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Image image;
 	
 	

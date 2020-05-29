@@ -42,7 +42,7 @@ public class User {
     private String password;
 	
 	@JsonBackReference
-	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Tweet> tweets;
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL} , targetEntity = UserRole.class)
