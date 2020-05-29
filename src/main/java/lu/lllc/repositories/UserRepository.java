@@ -16,10 +16,4 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	@Query(value = "SELECT * FROM users u LEFT JOIN likes l ON u.id=l.user_id WHERE l.tweet_id=:tweetid AND l.value=1 ORDER BY l.created ASC", nativeQuery = true)
 	List<User> getLikers(@Param("tweetid") String tweetid, Pageable pageable);
 	
-//	@Query(value = "SELECT * FROM users u LEFT JOIN likes l ON u.id=l.user_id WHERE l.tweet_id=:tweetid AND l.value=1 ORDER BY l.created ASC", nativeQuery = true)
-//	List<User> getLikers(@Param("tweetid") Integer tweetid);
-
-//	@Query(value ="SELECT * FROM users u LEFT JOIN likes l ON u.id=l.user_id WHERE l.tweet_id=1 AND l.value=1", nativeQuery = true)
-//	List<User> getEmLikers();
-//	
 }

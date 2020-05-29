@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import lu.lllc.entities.Like;
-import lu.lllc.entities.Tweet;
 import lu.lllc.entities.User;
 
 public interface LikeRepository extends JpaRepository<Like, Integer>{

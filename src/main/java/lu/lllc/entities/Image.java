@@ -19,7 +19,7 @@ public class Image {
 	private int id;
 	
 	@JsonManagedReference
-	@OneToOne
+	@OneToOne(targetEntity = Tweet.class)
 	@MapsId
 	private Tweet tweet;
 	

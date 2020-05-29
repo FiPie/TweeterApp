@@ -2,7 +2,6 @@ package lu.lllc.entities;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,10 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -61,14 +58,15 @@ public class Tweet {
 	private User user;
 
 	@JsonBackReference
-	@OneToMany(mappedBy = "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(orphanRemoval = true, mappedBy = "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Like.class)
 	private List<Like> likes;
 	
-//	@Nullable
+
 //	@PrimaryKeyJoinColumn
 //	@JsonIgnore
+	@Nullable
 	@JsonBackReference
-	@OneToOne(mappedBy= "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(orphanRemoval = true, mappedBy= "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Image image;
 	
 	

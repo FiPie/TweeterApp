@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lu.lllc.entities.User;
-import lu.lllc.repositories.LikeRepository;
 import lu.lllc.repositories.UserRepository;
 
 @Controller
@@ -23,8 +22,6 @@ public class MainController {
 	private HttpSession session;
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private LikeRepository likeRepository;
 
 	@RequestMapping("/")
 	public String index(Model model, Principal principal) {

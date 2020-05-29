@@ -16,8 +16,6 @@ import lu.lllc.dto.LikersRequestDto;
 import lu.lllc.entities.User;
 import lu.lllc.repositories.UserRepository;
 
-
-
 @RestController
 @RequestMapping("/api")
 public class ApiController {

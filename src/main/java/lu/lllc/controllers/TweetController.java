@@ -123,8 +123,10 @@ public class TweetController {
 				System.out.println("");
 				System.out.println("@ModelAttribute(\"tweetId\") int tweetId="+ tweetId +"");
 				System.out.println("attempting to DELETE tweet.getId()="+ tweet.getId() +"");
-				this.tweetRepository.delete(tweetRepository.getOne(tweetId));
-				/* this.tweetRepository.delete(tweet); */
+				/* this.tweetRepository.delete(tweetRepository.getOne(tweetId)); */
+				tweetRepository.flush();
+				this.tweetRepository.delete(tweet);
+				
 				/* tweetRepository.deleteById(tweetId); */
 				System.out.println("DELETED ? : " + !tweetRepository.existsById(tweetId));
 				return "redirect:/user/"+userId+"/tweets";
