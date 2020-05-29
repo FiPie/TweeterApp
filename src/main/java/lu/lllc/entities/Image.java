@@ -8,23 +8,22 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name="images")
+@Table(name = "images")
 public class Image {
 
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
-	
+
 	@OneToOne
 	@MapsId
 	private Tweet tweet;
-	
+
 	@Column
 	@Lob
 	private byte[] image;
-	
+
 	@Column
 	private String mime;
 
@@ -65,7 +64,4 @@ public class Image {
 		// TODO Auto-generated constructor stub
 	}
 
-
-	
-	
 }

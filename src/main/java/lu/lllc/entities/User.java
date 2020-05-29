@@ -26,45 +26,41 @@ public class User {
 	private int id;
 
 	@Column
-	@NotBlank(message="This field cannot be empty or consist only of whitespace characters")
+	@NotBlank(message = "This field cannot be empty or consist only of whitespace characters")
 	private String firstName;
 
 	@Column
-	@NotBlank(message="This field cannot be empty or consist only of whitespace characters")
+	@NotBlank(message = "This field cannot be empty or consist only of whitespace characters")
 	private String lastName;
 
 	@Column(unique = true)
-	@Email(message="This doesn't seem like a correct email address")
-	@NotBlank(message="This field cannot be empty or consist only of whitespace characters")
+	@Email(message = "This doesn't seem like a correct email address")
+	@NotBlank(message = "This field cannot be empty or consist only of whitespace characters")
 	private String email;
 
 	@Column
-    private String password;
-	
+	private String password;
+
 	@JsonBackReference
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Tweet> tweets;
-	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL} , targetEntity = UserRole.class)
-    private List<UserRole> userRoles;
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = { CascadeType.ALL }, targetEntity = UserRole.class)
+	private List<UserRole> userRoles;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Like> likes;
-	
+
 	/* constructor */
-	public User() { super(); }
-
-
-
+	public User() {
+		super();
+	}
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + ", tweets=" + tweets + ", userRoles=" + userRoles + "]";
 	}
-
-
-
 
 	/* getters and setters */
 	public int getId() {
@@ -123,7 +119,4 @@ public class User {
 		this.userRoles = userRoles;
 	}
 
-	
-
-	
 }

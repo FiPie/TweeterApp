@@ -21,7 +21,6 @@ import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,67 +36,42 @@ public class Tweet {
 	@Column
 	private int id;
 
-	@Size(min = 5, max = 50, message="Tweet title length should be anything between 5 and 50 characters")
+	@Size(min = 5, max = 50, message = "Tweet title length should be anything between 5 and 50 characters")
 	@Column
-	@NotBlank(message="The title cannot be empty or consist only of whitespace characters")
+	@NotBlank(message = "The title cannot be empty or consist only of whitespace characters")
 	private String title;
 
-	@Size(max = 160, message="Tweet text length should be anything between 5 and 160 characters")
+	@Size(max = 160, message = "Tweet text length should be anything between 5 and 160 characters")
 	@Column(name = "tweet_text")
-	@NotBlank(message="Tweet text cannot be empty or consist only of whitespace characters")
+	@NotBlank(message = "Tweet text cannot be empty or consist only of whitespace characters")
 	private String tweetText;
 
 	@Column
-	@CreatedDate 
+	@CreatedDate
 	private Timestamp created;
-	
+
 	@JsonIgnore
 	@JsonManagedReference
-	@JoinColumn(name="userId")
+	@JoinColumn(name = "userId")
 	@ManyToOne
 	private User user;
 
 	@JsonBackReference
 	@OneToMany(mappedBy = "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Like.class)
 	private List<Like> likes;
-	
 
 	@JsonIgnore
-	@OneToOne(mappedBy= "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "tweet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Image image;
-	
-	
-	public Image getImage() {
-		return image;
-	}
-
-	public void setImage(Image image) {
-		this.image = image;
-	}
 
 	private int likesNo;
 	private int dislikesNo;
-	
-	
-	public int getLikesNo() {
-		return likesNo;
-	}
-
-	public void setLikesNo(int likesNo) {
-		this.likesNo = likesNo;
-	}
-
-	public int getDislikesNo() {
-		return dislikesNo;
-	}
-
-	public void setDislikesNo(int dislikesNo) {
-		this.dislikesNo = dislikesNo;
-	}
 
 	/* constructor */
-	public Tweet() { super(); }
-	
+	public Tweet() {
+		super();
+	}
+
 	/* getters and setters */
 	public int getId() {
 		return id;
@@ -138,7 +112,7 @@ public class Tweet {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public List<Like> getLikes() {
 		return likes;
 	}
@@ -147,4 +121,27 @@ public class Tweet {
 		this.likes = likes;
 	}
 
+	public int getLikesNo() {
+		return likesNo;
+	}
+
+	public void setLikesNo(int likesNo) {
+		this.likesNo = likesNo;
+	}
+
+	public int getDislikesNo() {
+		return dislikesNo;
+	}
+
+	public void setDislikesNo(int dislikesNo) {
+		this.dislikesNo = dislikesNo;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
 }

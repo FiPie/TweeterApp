@@ -28,7 +28,6 @@ public class Like {
 	private int id;
 
 	@Column(name = "value")
-	/* @Pattern(regexp = "(-1|1)") */
 	private int value;
 
 	@JoinColumn(name = "userId")
