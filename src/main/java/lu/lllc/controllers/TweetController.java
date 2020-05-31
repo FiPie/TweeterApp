@@ -139,10 +139,26 @@ public class TweetController {
 	
 	@PostMapping("/edit")
 	@Transactional
-	public String editTweet(@Validated @ModelAttribute("tweet") Tweet tweet, BindingResult bindingResult) {
+	public String editTweet(@Validated @ModelAttribute("tweet") Tweet tweet, BindingResult bindingResult, @RequestParam("file") MultipartFile file) {
 		if (bindingResult.hasErrors()) {
 			return "redirect:/tweet/showTweet/"+tweet.getId()+"";
 		} else {
+			
+			String mimetype = file.getContentType();
+			String type = mimetype.split("/")[0];
+			
+			if (type.equals("image")) {
+				Image image = new Image();
+				image.setTweet(tweet);
+				image.setMime(mimetype);
+				try {
+					image.setImage(file.getBytes());
+					tweet.setImage(image);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			this.tweetRepository.save(tweet);
 			return "redirect:/tweet/showTweet/"+tweet.getId()+"";
 		}

@@ -156,9 +156,11 @@
 							treatment</h5>
 
 					</div>
-
-					<img class="card-img-top py-1"
+					
+					
+						<img class="card-img-top py-1"
 						th:src="@{/tweet/getImage/{id}(id=*{tweet.id})}" alt="">
+					
 
 					<div class="card-body pt-0 mt-0">
 
@@ -224,17 +226,6 @@
 									</button>
 								</form>
 
-								<!-- 										<span>
-											<a th:href="@{/tweet/{id}/like(id=${tweet.id})}">
-												<i class="far fa-thumbs-up"></i>
-											</a>
-										</span>&nbsp;&nbsp; 
-										
-										<span>
-											<a th:href="@{/tweet/{id}/dislike(id=${tweet.id})}">
-												<i class="far fa-thumbs-down"></i>
-											</a>
-										</span> -->
 							</div>
 						</div>
 						<div class="row text-justify">
