@@ -59,8 +59,10 @@
 					<td th:text="${user.email}"></td>
 					
 					<td>
-						<a th:href="@{/user/{id}/tweets(id=${user.id})}">Tweets</a>
-						<small>(<span th:text="${#lists.size(user.tweets)}"></span>)</small>
+						<div style="padding-top: 7px">
+							<a th:href="@{/user/{id}/tweets(id=${user.id})}" class="card-link">Tweets</a>
+							<small>(<span th:text="${#lists.size(user.tweets)}"></span>)</small>
+						</div>
 					</td>
 					
 					<td sec:authorize="hasRole('ROLE_ADMIN')">
