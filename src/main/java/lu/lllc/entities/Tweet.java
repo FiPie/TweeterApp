@@ -41,7 +41,7 @@ public class Tweet {
 	@NotBlank(message = "The title cannot be empty or consist only of whitespace characters")
 	private String title;
 
-	@Size(max = 160, message = "Tweet text length should be anything between 5 and 160 characters")
+	@Size(max = 160, message = "Tweet text length should be anything between 1 and 160 characters")
 	@Column(name = "tweet_text")
 	@NotBlank(message = "Tweet text cannot be empty or consist only of whitespace characters")
 	private String tweetText;

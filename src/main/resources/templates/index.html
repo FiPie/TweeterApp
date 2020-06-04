@@ -16,7 +16,14 @@
 	crossorigin="anonymous">
 
 <title>Tweeter Home</title>
+
+<style type="text/css">
+canvas {
+	/* max-height:  */
+}
+</style>
 </head>
+
 <body>
 
 	<div class="card text-center">
@@ -46,11 +53,15 @@
 					th:if="${session.userFirstName != null && session.userId != null}">
 					<a th:href="@{/user/{id}/tweets(id=${session.userId})}"
 					th:text="${session.userFirstName}"></a>
-				</b> , check out our cool and numerous feats!
+				</b> , check out our user's <a th:href="@{/tweet/list}">Tweets</a> and cool and numerous feats!
 			</p>
 		</div>
 
 	</div>
+	
+		<canvas></canvas>
 
+	
+	<script type="text/javascript" src="js/circularMotion.js"></script>
 </body>
 </html>
