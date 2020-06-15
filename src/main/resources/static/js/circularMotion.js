@@ -2,10 +2,12 @@
 var canvas = document.querySelector('canvas');
 var body = document.querySelector('body');
 var frame = document.querySelector('#frame');
-canvas.width = frame.innerWidth;
-canvas.height = frame.innerHeight;
-//canvas.height = window.innerHeight;
-//canvas.height = body.clientHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+//canvas.width = body.innerWidth;
+//canvas.height = frame.innerHeight;
+
+//canvas.height = body.innerHeight;
 
 var c = canvas.getContext('2d');
 
