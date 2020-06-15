@@ -2,3 +2,16 @@
 	color: red;
 	font-size: 0.5em;
 }
+
+html,
+body {
+  height: 100%;
+}
+
+#page-content {
+  flex: 1 0 auto;
+}
+
+#sticky-footer {
+  flex-shrink: none;
+}

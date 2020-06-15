@@ -14,54 +14,74 @@
 	rel="stylesheet"
 	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
 	crossorigin="anonymous">
-
+<link th:href="@{/css/style.css}" rel="stylesheet">
 <title>Tweeter Home</title>
 
 <style type="text/css">
 canvas {
 	/* max-height:  */
+	
 }
 </style>
 </head>
 
-<body>
+<body class="d-flex flex-column">
 
-	<div class="card text-center">
-		<div class="card-header">
-			<ul class="nav nav-tabs card-header-tabs">
-				<li class="nav-item"><a class="nav-link active" th:href="@{/}">Home</a></li>
-				<li class="nav-item"><a class="nav-link"
-					th:href="@{/tweet/list}">TweetList</a></li>
-				<li th:if="${#authorization.expression('isAuthenticated()')}"
-					class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
-				<li class="nav-item"><a class="nav-link" th:href="@{/user/all}">UserList</a></li>
-				<li th:if="${#authorization.expression('!isAuthenticated()')}"
-					class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a>
-				</li>
-				<li th:if="${#authorization.expression('!isAuthenticated()')}"
-					class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a>
-				</li>
-				<li th:if="${#authorization.expression('isAuthenticated()')}"
-					class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a>
-				</li>
-			</ul>
-		</div>
-		<div class="card-body">
-			<h5 class="card-title">Tweeter App with Thymeleaf</h5>
-			<p class="card-text">
-				Welcome to Tweeter <b
-					th:if="${session.userFirstName != null && session.userId != null}">
-					<a th:href="@{/user/{id}/tweets(id=${session.userId})}"
-					th:text="${session.userFirstName}"></a>
-				</b> , check out our user's <a th:href="@{/tweet/list}">Tweets</a> and cool and numerous feats!
-			</p>
+	<div id="page-content">
+
+		<div class="card text-center">
+			<div class="card-header">
+				<ul class="nav nav-tabs card-header-tabs">
+					<li class="nav-item"><a class="nav-link active" th:href="@{/}">Home</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/tweet/list}">TweetList</a></li>
+					<li th:if="${#authorization.expression('isAuthenticated()')}"
+						class="nav-item"><a class="nav-link" th:href="@{/tweet/add}">Tweet</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/user/all}">UserList</a></li>
+					<li th:if="${#authorization.expression('!isAuthenticated()')}"
+						class="nav-item"><a class="nav-link" th:href="@{/user/add}">Register</a>
+					</li>
+					<li th:if="${#authorization.expression('!isAuthenticated()')}"
+						class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a>
+					</li>
+					<li th:if="${#authorization.expression('isAuthenticated()')}"
+						class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="card-body">
+				<h5 class="card-title">Tweeter App with Thymeleaf</h5>
+				<p class="card-text">
+					Welcome to Tweeter <b
+						th:if="${session.userFirstName != null && session.userId != null}">
+						<a th:href="@{/user/{id}/tweets(id=${session.userId})}"
+						th:text="${session.userFirstName}"></a>
+					</b> , check out our users' <a th:href="@{/tweet/list}">Tweets</a> and
+					our cool and numerous features!
+				</p>
+			</div>
+
 		</div>
 
+		<div id="frame" class="w-100 h-100 flex-grow-0">	
+			<canvas class="canvas-content"></canvas>
+		</div>
+		
+			<footer id="sticky-footer" class="py-2 bg-light text-black-50">
+		<div class="container text-center">
+			<small>Copyright &copy;2020 <a
+				href="http://tweeter-app-git-tweeterapp.apps.ca-central-1.starter.openshift-online.com/">Tweeter
+					App</a></small>
+		</div>
+	</footer>
+	
 	</div>
-	
-		<canvas></canvas>
 
-	
+
+
 	<script type="text/javascript" src="js/circularMotion.js"></script>
+
 </body>
 </html>

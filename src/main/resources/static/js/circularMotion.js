@@ -1,7 +1,11 @@
 //Initial Setup
 var canvas = document.querySelector('canvas');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+var body = document.querySelector('body');
+var frame = document.querySelector('#frame');
+canvas.width = frame.innerWidth;
+canvas.height = frame.innerHeight;
+//canvas.height = window.innerHeight;
+//canvas.height = body.clientHeight;
 
 var c = canvas.getContext('2d');
 
@@ -33,7 +37,7 @@ window.addEventListener('click', function() {
   init();
 });
 
-//useful functions
+// useful functions
 function randomColor(colors) {
   return colors[Math.floor(Math.random() * colors.length)];
 }
@@ -42,7 +46,7 @@ function randomIntFromRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-//Objects
+// Objects
 function Particle(x, y, radius, color) {
   this.x = x;
   this.y = y;
@@ -55,10 +59,10 @@ function Particle(x, y, radius, color) {
     x: x,
     y: y
   };
-  //galaxy effect
+  // galaxy effect
   // this.distanceFromCenter = {
-  //   x: randomIntFromRange(120, 120),
-  //   y: randomIntFromRange(120, 120)
+  // x: randomIntFromRange(120, 120),
+  // y: randomIntFromRange(120, 120)
   // };
   this.update = () => {
     const lastPoint = {
@@ -66,14 +70,14 @@ function Particle(x, y, radius, color) {
       y: this.y
     };
     mouse
-    //move points over time
+    // move points over time
     this.radians += this.velocity;
 
     // Drag effect on mouse movement
     this.lastMouse.x += (mouse.x - this.lastMouse.x) * 0.05;
     this.lastMouse.y += (mouse.y - this.lastMouse.y) * 0.05;
 
-    //circular motion
+    // circular motion
     this.x = this.lastMouse.x + Math.cos(this.radians) * this.distanceFromCenter;
     this.y = this.lastMouse.y + Math.sin(this.radians) * this.distanceFromCenter;
 
@@ -91,7 +95,7 @@ function Particle(x, y, radius, color) {
   };
 };
 
-//implementation
+// implementation
 let particles;
 
 function init() {
@@ -106,11 +110,11 @@ function init() {
   console.log(particles);
 }
 
-//animation
+// animation
 function animate() {
   console.log('animate()');
   requestAnimationFrame(animate);
-  //tracing effect
+  // tracing effect
   c.fillStyle = 'rgba(255,255,255,0.05)';
   c.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -118,7 +122,7 @@ function animate() {
     particle.update();
   });
 
-  //c.fillText("This is canvas babe!^^", mouse.x, mouse.y);
+  // c.fillText("This is canvas babe!^^", mouse.x, mouse.y);
 }
 
 
